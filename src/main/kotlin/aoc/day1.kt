@@ -1,24 +1,12 @@
 package aoc
 
 fun main() {
-    val lines = checkNotNull(ClassLoader.getSystemResourceAsStream("aoc/input1.txt")) { "input1.txt not found" }
-        .bufferedReader()
-        .readLines()
-
-    val max = IntArray(3)
-    var curr = 0
-    for (line in lines) {
-        if (line == "") {
-            if (max.any { curr > it }) {
-                max.sort()
-                max[0] = curr
-            }
-            curr = 0
-        } else {
-            curr += line.toInt()
-        }
-    }
-
-    println(max.joinToString(","))
-    println(max.sum())
+    val text = checkNotNull(ClassLoader.getSystemResourceAsStream("aoc/input1.txt")) { "input1.txt not found" }
+        .reader().readText().trimEnd()
+    println(getLargest(text).take(3).toList())
 }
+
+fun getLargest(text: String): Sequence<Int> =
+    text.split("\n\n".toRegex()).asSequence()
+        .map { group -> group.split("\n".toRegex()).sumOf { it.toInt() } }
+        .sortedDescending()
