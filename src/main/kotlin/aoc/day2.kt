@@ -16,14 +16,7 @@ data class Game(val opponent: Int, val outcome: Int)
 
 fun convert(n: Int) = (3 + n) % 3
 
-fun Game.calculatePlayerPoints(): Int = opponent.pickHand(outcome) + 1 + outcome * 3
-
-/**
- * X = lose
- * Y = draw
- * Z = win
- */
-fun Int.pickHand(outcome: Int): Int = convert(this + outcome - 1)
+fun Game.calculatePlayerPoints(): Int = convert(opponent + outcome - 1) + 1 + outcome * 3
 
 // parsing
 
