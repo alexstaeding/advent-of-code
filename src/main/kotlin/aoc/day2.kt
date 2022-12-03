@@ -1,13 +1,7 @@
 package aoc
 
-fun main() {
-    val points = getInput(2)
-        .splitToSequence("\n")
-        .map { it.toGame() }
-        .sumOf { it.calculatePlayerPoints() }
-    println(points)
-}
+fun main() = println(getInput(2).day2())
 
-data class Game(val opponent: Int, val outcome: Int)
-fun Game.calculatePlayerPoints(): Int = (3 + (opponent + outcome - 1)) % 3 + 1 + outcome * 3
-fun String.toGame() = Game(this[0].code - 'A'.code, this[2].code - 'X'.code)
+fun String.day2(): Int = splitToSequence("\n")
+    .map { it[0].code - 'A'.code to it[2].code - 'X'.code }
+    .sumOf { (a, b) -> (3 + (a + b - 1)) % 3 + 1 + b * 3 }

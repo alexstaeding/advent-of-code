@@ -22,10 +22,7 @@ class Day2Test : FunSpec({
             A Y
             B X
             C Z
-        """.trimIndent()
-        input.splitToSequence("\n")
-            .map { it.toGame() }
-            .sumOf { it.calculatePlayerPoints() } shouldBe 12
+        """.trimIndent().day2() shouldBe 12
     }
 
     test("testAdvancedA") {
@@ -46,10 +43,7 @@ class Day2Test : FunSpec({
             B X
             A X
             A X
-        """.trimIndent()
-        input.splitToSequence("\n")
-            .map { it.toGame() }
-            .sumOf { it.calculatePlayerPoints() } shouldBe 51
+        """.trimIndent().day2() shouldBe 51
     }
 
     test("testAdvancedB") {
@@ -95,10 +89,7 @@ class Day2Test : FunSpec({
             B X
             A X
             C X
-        """.trimIndent()
-        input.splitToSequence("\n")
-            .map { it.toGame() }
-            .sumOf { it.calculatePlayerPoints() } shouldBe 123
+        """.trimIndent().day2() shouldBe 123
     }
 
     test("testAdvancedC") {
@@ -199,10 +190,7 @@ class Day2Test : FunSpec({
             B X
             A X
             C X
-        """.trimIndent()
-        input.splitToSequence("\n")
-            .map { it.toGame() }
-            .sumOf { it.calculatePlayerPoints() } shouldBe 293
+        """.trimIndent().day2() shouldBe 293
     }
 
     test("testAdvancedD") {
@@ -277,16 +265,10 @@ class Day2Test : FunSpec({
             A X
             A X
             A X
-        """.trimIndent()
-        input.splitToSequence("\n")
-            .map { it.toGame() }
-            .sumOf { it.calculatePlayerPoints() } shouldBe 264
+        """.trimIndent().day2() shouldBe 264
     }
 
     test("testWithInputFile") {
-        val input = getInput(2)
-        input.splitToSequence("\n")
-            .map { it.toGame() }
-            .sumOf { it.calculatePlayerPoints() } shouldBe 8295
+        val input = getInput(2).day2() shouldBe 8295
     }
 })
