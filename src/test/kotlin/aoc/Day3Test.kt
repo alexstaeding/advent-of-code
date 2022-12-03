@@ -50,12 +50,31 @@ class Day3Test : FunSpec({
         getInput(3).day3a() shouldBe 7997
     }
 
-    test("basicMultiLineB") {
+    test("basicMultiLineB1") {
         """
             vJrwpWtwJgWrhcsFMMfFFhFp
             jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
             PmmdzqPrVvPwwTWBwg
-        """.trimIndent().trimEnd().day3b() shouldBe 18
+        """.trimIndent().trimEnd().day3b() shouldBe 'r'.toScore()
+    }
+
+    test("basicMultiLineB2") {
+        """
+            wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+            ttgJtRGJQctTZtZT
+            CrZsJsPPZsGzwwsLwLmpwMDw
+        """.trimIndent().trimEnd().day3b() shouldBe 'Z'.toScore()
+    }
+
+    test("combinedMultiLineB1") {
+        """
+            vJrwpWtwJgWrhcsFMMfFFhFp
+            jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+            PmmdzqPrVvPwwTWBwg
+            wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+            ttgJtRGJQctTZtZT
+            CrZsJsPPZsGzwwsLwLmpwMDw
+        """.trimIndent().trimEnd().day3b() shouldBe sequenceOf('r', 'Z').sumOf { it.toScore() }
     }
 
     test("inputFileB") {
