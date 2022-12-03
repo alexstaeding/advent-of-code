@@ -1,0 +1,8 @@
+[versions]
+kotlin = "1.7.22"
+
+[libraries]
+kotest = "io.kotest:kotest-runner-junit5-jvm:5.5.4"
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
