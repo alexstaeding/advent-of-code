@@ -8,14 +8,6 @@ fun main() {
     println(points)
 }
 
-// model
-
 data class Game(val opponent: Int, val outcome: Int)
-
-// game logic
-
 fun Game.calculatePlayerPoints(): Int = (3 + (opponent + outcome - 1)) % 3 + 1 + outcome * 3
-
-// parsing
-
 fun String.toGame() = Game(this[0].code - 'A'.code, this[2].code - 'X'.code)
