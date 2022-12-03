@@ -12,3 +12,7 @@ fun String.day3b(): Int = splitToSequence("\n")
     .sum()
 
 fun Char.toScore() = if (code > 96) code - 96 else code - 38
+
+// golfed versions of b
+// 157: fun String.b()=split("\n").windowed(3,3){(a,b,c)->a.toSet().intersect(b.toSet()).intersect(c.toSet()).first().run{if(code>96)code-96 else code-38}}.sum()
+// 165: println(java.io.File("a").readLines().windowed(3,3){(a,b,c)->a.toSet().intersect(b.toSet()).intersect(c.toSet()).first().run{if(code>96)code-96 else code-38}}.sum())
