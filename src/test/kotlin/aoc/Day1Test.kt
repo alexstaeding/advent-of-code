@@ -5,7 +5,7 @@ import io.kotest.matchers.shouldBe
 
 class Day1Test : FunSpec({
     test("getLargest") {
-        val input = """
+        """
             1
             2
             3
@@ -17,7 +17,6 @@ class Day1Test : FunSpec({
             2
 
             1
-        """.trimIndent()
-        getLargest(input).take(3).toList() shouldBe listOf(15, 6, 2)
+        """.trimIndent().day1().take(3).toList() shouldBe listOf(15, 6, 2)
     }
 })

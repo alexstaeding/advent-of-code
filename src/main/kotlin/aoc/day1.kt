@@ -1,10 +1,7 @@
 package aoc
 
-fun main() {
-    println(getLargest(getInput(1)).take(3).toList())
-}
+fun main() = println(getInput(1).day1().take(3).toList())
 
-fun getLargest(text: String): Sequence<Int> =
-    text.split("\n\n".toRegex()).asSequence()
-        .map { group -> group.split("\n".toRegex()).sumOf { it.toInt() } }
-        .sortedDescending()
+fun String.day1(): Sequence<Int> = splitToSequence("\n\n")
+    .map { group -> group.split("\n").sumOf { it.toInt() } }
+    .sortedDescending()

@@ -18,7 +18,7 @@ import io.kotest.matchers.shouldBe
  */
 class Day2Test : FunSpec({
     test("testVerySimple") {
-        val input = """
+        """
             A Y
             B X
             C Z
@@ -26,7 +26,7 @@ class Day2Test : FunSpec({
     }
 
     test("testAdvancedA") {
-        val input = """
+        """
             B Z
             C X
             C X
@@ -47,7 +47,7 @@ class Day2Test : FunSpec({
     }
 
     test("testAdvancedB") {
-        val input = """
+        """
             A X
             A X
             A X
@@ -93,7 +93,7 @@ class Day2Test : FunSpec({
     }
 
     test("testAdvancedC") {
-        val input = """
+        """
             A Y
             A X
             A Y
@@ -194,7 +194,7 @@ class Day2Test : FunSpec({
     }
 
     test("testAdvancedD") {
-        val input = """
+        """
             B Y
             A X
             A X
@@ -269,6 +269,6 @@ class Day2Test : FunSpec({
     }
 
     test("testWithInputFile") {
-        val input = getInput(2).day2() shouldBe 8295
+        getInput(2).day2() shouldBe 8295
     }
 })
