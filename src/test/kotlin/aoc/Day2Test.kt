@@ -17,7 +17,7 @@ import io.kotest.matchers.shouldBe
  * Z = win
  */
 class Day2Test : FunSpec({
-    test("testVerySimple") {
+    test("verySimple") {
         """
             A Y
             B X
@@ -25,7 +25,7 @@ class Day2Test : FunSpec({
         """.trimIndent().day2() shouldBe 12
     }
 
-    test("testAdvancedA") {
+    test("advancedA") {
         """
             B Z
             C X
@@ -46,7 +46,7 @@ class Day2Test : FunSpec({
         """.trimIndent().day2() shouldBe 51
     }
 
-    test("testAdvancedB") {
+    test("advancedB") {
         """
             A X
             A X
@@ -92,7 +92,7 @@ class Day2Test : FunSpec({
         """.trimIndent().day2() shouldBe 123
     }
 
-    test("testAdvancedC") {
+    test("advancedC") {
         """
             A Y
             A X
@@ -193,7 +193,7 @@ class Day2Test : FunSpec({
         """.trimIndent().day2() shouldBe 293
     }
 
-    test("testAdvancedD") {
+    test("advancedD") {
         """
             B Y
             A X
@@ -268,7 +268,7 @@ class Day2Test : FunSpec({
         """.trimIndent().day2() shouldBe 264
     }
 
-    test("testWithInputFile") {
+    test("inputFile") {
         getInput(2).day2() shouldBe 8295
     }
 })

@@ -16,19 +16,19 @@ class Day3Test : FunSpec({
         'Z'.toScore() shouldBe 26 + 26
     }
 
-    test("testSingleLineA1") {
+    test("singleLineA1") {
         """
             vJrwpWtwJgWrhcsFMMfFFhFp
         """.trimIndent().day3a() shouldBe 'p'.toScore()
     }
 
-    test("testVerySimpleA2") {
+    test("verySimpleA2") {
         """
             jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
         """.trimIndent().day3a() shouldBe 'L'.toScore()
     }
 
-    test("testBasicMultiLineA") {
+    test("basicMultiLineA") {
         """
             vJrwpWtwJgWrhcsFMMfFFhFp
             jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
@@ -50,7 +50,7 @@ class Day3Test : FunSpec({
         getInput(3).day3a() shouldBe 7997
     }
 
-    test("testBasicMultiLineB") {
+    test("basicMultiLineB") {
         """
             vJrwpWtwJgWrhcsFMMfFFhFp
             jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL

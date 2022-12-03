@@ -4,7 +4,7 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 
 class Day1Test : FunSpec({
-    test("getLargest") {
+    test("simple") {
         """
             1
             2
