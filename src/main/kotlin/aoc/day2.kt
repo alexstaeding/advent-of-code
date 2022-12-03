@@ -14,9 +14,7 @@ data class Game(val opponent: Int, val outcome: Int)
 
 // game logic
 
-fun convert(n: Int) = (3 + n) % 3
-
-fun Game.calculatePlayerPoints(): Int = convert(opponent + outcome - 1) + 1 + outcome * 3
+fun Game.calculatePlayerPoints(): Int = (3 + (opponent + outcome - 1)) % 3 + 1 + outcome * 3
 
 // parsing
 
