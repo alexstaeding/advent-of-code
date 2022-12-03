@@ -14,19 +14,19 @@ data class Game(val opponent: Char, val outcome: Char)
 
 // game logic
 
-fun convertChar(n: Int) = listOf('A', 'B', 'C')[(3 + n) % 3]
+fun convert(n: Int) = (3 + n) % 3
 
-fun Game.calculatePlayerPoints(): Int = opponent.pickHand(outcome).code - 'A'.code + 1 + (outcome.code - 'X'.code) * 3
+fun Game.calculatePlayerPoints(): Int = opponent.pickHand(outcome) + 1 + (outcome.code - 'X'.code) * 3
 
 /**
  * X = lose
  * Y = draw
  * Z = win
  */
-fun Char.pickHand(outcome: Char): Char = when (outcome) {
-    'X' -> convertChar(code - 'A'.code - 1)
-    'Y' -> this
-    'Z' -> convertChar(code - 'A'.code + 1)
+fun Char.pickHand(outcome: Char): Int = when (outcome) {
+    'X' -> convert(code - 'A'.code - 1)
+    'Y' -> code - 'A'.code
+    'Z' -> convert(code - 'A'.code + 1)
     else -> error("Invalid outcome: $outcome")
 }
 
