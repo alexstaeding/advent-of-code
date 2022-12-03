@@ -23,12 +23,7 @@ fun Game.calculatePlayerPoints(): Int = opponent.pickHand(outcome) + 1 + outcome
  * Y = draw
  * Z = win
  */
-fun Int.pickHand(outcome: Int): Int = when (outcome) {
-    0 -> convert(this - 1)
-    1 -> this
-    2 -> convert(this + 1)
-    else -> error("Invalid outcome: $outcome")
-}
+fun Int.pickHand(outcome: Int): Int = convert(this + outcome - 1)
 
 // parsing
 
