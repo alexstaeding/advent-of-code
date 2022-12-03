@@ -10,7 +10,7 @@ fun main() {
 
 // model
 
-data class Game(val opponent: Char, val outcome: Char)
+data class Game(val opponent: Int, val outcome: Char)
 
 // game logic
 
@@ -23,13 +23,13 @@ fun Game.calculatePlayerPoints(): Int = opponent.pickHand(outcome) + 1 + (outcom
  * Y = draw
  * Z = win
  */
-fun Char.pickHand(outcome: Char): Int = when (outcome) {
-    'X' -> convert(code - 'A'.code - 1)
-    'Y' -> code - 'A'.code
-    'Z' -> convert(code - 'A'.code + 1)
+fun Int.pickHand(outcome: Char): Int = when (outcome) {
+    'X' -> convert(this - 1)
+    'Y' -> this
+    'Z' -> convert(this + 1)
     else -> error("Invalid outcome: $outcome")
 }
 
 // parsing
 
-fun String.toGame() = Game(this[0], this[2])
+fun String.toGame() = Game(this[0].code - 'A'.code, this[2])
