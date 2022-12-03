@@ -1,14 +1,20 @@
 package aoc
 
-fun main() = println(getInput(3).day3())
+fun main() = println(getInput(3).day3b())
 
-fun String.day3(): Int {
+fun String.day3a(): Int {
     return splitToSequence("\n").map { s ->
         val (left, right) = s.withIndex()
             .partition { it.index < s.length / 2 }
         left.map { it.value }
             .intersect(right.map { it.value }.toSet())
             .sumOf { c -> c.toScore() }
+    }.sum()
+}
+
+fun String.day3b(): Int {
+    return splitToSequence("\n").windowed(size = 3, step = 3) { (a, b, c) ->
+        a.toSet().intersect(b.toSet()).intersect(c.toSet()).single().toScore()
     }.sum()
 }
 

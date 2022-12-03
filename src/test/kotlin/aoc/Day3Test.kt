@@ -16,17 +16,19 @@ class Day3Test : FunSpec({
         'Z'.toScore() shouldBe 26 + 26
     }
 
-    test("testVerySimpleA") {
+    test("testSingleLineA1") {
         """
             vJrwpWtwJgWrhcsFMMfFFhFp
-        """.trimIndent().day3() shouldBe 'p'.toScore()
+        """.trimIndent().day3a() shouldBe 'p'.toScore()
     }
-    test("testVerySimpleB") {
+
+    test("testVerySimpleA2") {
         """
             jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
-        """.trimIndent().day3() shouldBe 'L'.toScore()
+        """.trimIndent().day3a() shouldBe 'L'.toScore()
     }
-    test("testBasicMultiLine") {
+
+    test("testBasicMultiLineA") {
         """
             vJrwpWtwJgWrhcsFMMfFFhFp
             jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
@@ -34,7 +36,7 @@ class Day3Test : FunSpec({
             wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
             ttgJtRGJQctTZtZT
             CrZsJsPPZsGzwwsLwLmpwMDw
-        """.trimIndent().trimEnd().day3() shouldBe sequenceOf(
+        """.trimIndent().trimEnd().day3a() shouldBe sequenceOf(
             'p',
             'L',
             'P',
@@ -42,6 +44,21 @@ class Day3Test : FunSpec({
             't',
             's',
         ).sumOf { it.toScore() }
+    }
 
+    test("inputFileA") {
+        getInput(3).day3a() shouldBe 7997
+    }
+
+    test("testBasicMultiLineB") {
+        """
+            vJrwpWtwJgWrhcsFMMfFFhFp
+            jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+            PmmdzqPrVvPwwTWBwg
+        """.trimIndent().trimEnd().day3b() shouldBe 18
+    }
+
+    test("inputFileB") {
+        getInput(3).day3b() shouldBe 2545
     }
 })
