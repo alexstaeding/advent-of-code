@@ -1,7 +1,5 @@
 package aoc
 
-fun main() = println(getInput(3).day3b())
-
 fun String.day3a(): Int {
     return splitToSequence("\n").map { s ->
         val (left, right) = s.withIndex()
