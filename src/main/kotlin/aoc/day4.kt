@@ -1,17 +1,14 @@
 package aoc
 
 fun main() {
-    println(getReader(4).readLines().sumOf { it.day4() })
+    println(getInput(4).day4a())
 }
 
-fun String.day4(): Int {
-    val (left, right) = split(",").map { it.toRange().toSet() }
+fun String.day4a(): Int = split("\n").sumOf {
+    val (left, right) = it.split(",").map { it.toRange().toSet() }
     val intersection = left.intersect(right)
-    if (intersection == left || intersection == right) return 1
-    return 0
+    val r: Int = if (intersection == left || intersection == right) 1 else 0
+    r
 }
 
-fun String.toRange(): IntRange {
-    val (a, b) = split("-")
-    return a.toInt()..b.toInt()
-}
+fun String.toRange() = split("-").map { it.toInt() }.zipWithNext().single().let { (a, b) -> a..b }
