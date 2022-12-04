@@ -36,4 +36,7 @@ class Day4Test : FunSpec({
     test("inputFileA") {
         getInput(4).day4a() shouldBe 532
     }
+    test("inputFileB") {
+        getInput(4).day4b() shouldBe 854
+    }
 })
