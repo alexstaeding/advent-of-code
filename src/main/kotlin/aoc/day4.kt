@@ -4,11 +4,11 @@ fun main() {
     println(getInput(4).day4b())
 }
 
-fun String.day4a(): Int = split("\n").sumOf {
-    val (left, right) = it.split(",").map { it.toRange().toSet() }
-    val intersection = left.intersect(right)
-    val r: Int = if (intersection == left || intersection == right) 1 else 0
-    r
+fun String.day4a(): Int = split("\n").sumOf { line ->
+    line.split(",")
+        .map { it.toRange().toSet() }
+        .zipWithNext { a, b -> a.intersect(b).let { it == a || it == b } }
+        .count { it }
 }
 
 fun String.day4b(): Int = split("\n").sumOf { line ->
