@@ -13,10 +13,7 @@ fun String.day4a(): Int = split("\n").sumOf {
 
 fun String.day4b(): Int = split("\n").map {
     val (left, right) = it.split(",").map { it.toRange().toSet() }
-    for (i in left) {
-        if (i in right) return@map 1
-    }
-    return@map 0
+    if (left.intersect(right).isEmpty()) 0 else 1
 }.sum()
 
 fun String.toRange() = split("-").map { it.toInt() }.zipWithNext().single().let { (a, b) -> a..b }
