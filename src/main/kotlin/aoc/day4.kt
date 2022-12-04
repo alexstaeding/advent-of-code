@@ -11,9 +11,11 @@ fun String.day4a(): Int = split("\n").sumOf {
     r
 }
 
-fun String.day4b(): Int = split("\n").map {
-    val (left, right) = it.split(",").map { it.toRange().toSet() }
-    if (left.intersect(right).isEmpty()) 0 else 1
-}.sum()
+fun String.day4b(): Int = split("\n").sumOf { line ->
+    line.split(",")
+        .map { it.toRange() }
+        .zipWithNext { a, b -> a.intersect(b).isEmpty() }
+        .count { !it }
+}
 
 fun String.toRange() = split("-").map { it.toInt() }.zipWithNext().single().let { (a, b) -> a..b }
