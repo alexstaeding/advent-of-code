@@ -1,23 +1,27 @@
 package aoc
 
-fun String.day5a(): String {
+fun String.day5a(): String = day5(State::move)
+fun String.day5b(): String = day5(State::moveTogether)
+
+private fun String.day5(moveCmd: MoveCmd): String {
     val (commands: List<String>, initialState: State) = lineSequence()
         .partition { it.startsWith("move") }
         .let { (commands, state) -> commands to state.readState().map { it } }
     initialState.print()
-    val endState = commands.fold(initialState) { state, command -> state.applyCommand(command) }
+    val endState = commands.fold(initialState) { state, command -> state.applyCommand(command, moveCmd) }
     return endState.map { it.last() }.joinToString("")
 }
 
 typealias State = List<List<Char>>
+typealias MoveCmd = State.(count: Int, from: Int, to: Int) -> State
 
 fun State.print() = forEach { println(it) }
 
 val cmdRegex = "move (?<count>[1-9][0-9]*) from (?<from>[1-9][0-9]*) to (?<to>[1-9][0-9]*)".toRegex()
 
-fun State.applyCommand(cmd: String): State {
+fun State.applyCommand(cmd: String, moveCmd: MoveCmd): State {
     val (count, from, to) = checkNotNull(cmdRegex.matchEntire(cmd)).groupValues.drop(1).map { it.toInt() }
-    return move(count, from - 1, to - 1)
+    return moveCmd(count, from - 1, to - 1)
 }
 
 fun State.move(count: Int, from: Int, to: Int): State {
@@ -31,6 +35,17 @@ fun State.move(count: Int, from: Int, to: Int): State {
                 to -> chars + this[from].last()
                 else -> chars
             }
+        }
+    }
+}
+
+fun State.moveTogether(count: Int, from: Int, to: Int): State {
+    require(count != 0)
+    return mapIndexed { index, chars ->
+        when (index) {
+            from -> chars.dropLast(count)
+            to -> chars + this[from].takeLast(count)
+            else -> chars
         }
     }
 }

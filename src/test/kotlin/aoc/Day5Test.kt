@@ -43,8 +43,12 @@ class Day5Test : FunSpec({
         """.trimIndent().lines().readState() shouldBe listOf(listOf('A'), listOf('B'), listOf('C', 'D'))
     }
 
-    test("testSimple") {
-        """
+    mapOf(
+        String::day5a to "CMZ",
+        String::day5b to "MCD",
+    ).forEach { (func, expected) ->
+        test("simple${func.name[4].uppercaseChar()}") {
+            """
                 [D]
             [N] [C]
             [Z] [M] [P]
@@ -54,10 +58,15 @@ class Day5Test : FunSpec({
             move 3 from 1 to 3
             move 2 from 2 to 1
             move 1 from 1 to 2
-        """.trimIndent().day5a() shouldBe "CMZ"
+        """.trimIndent().(func as String.() -> String)() shouldBe expected
+        }
     }
 
     test("inputFileA") {
         getInput(5).day5a() shouldBe "TWSGQHNHL"
+    }
+
+    test("inputFileB") {
+        getInput(5).day5b() shouldBe "JNRSCDWPP"
     }
 })
