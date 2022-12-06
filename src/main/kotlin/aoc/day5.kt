@@ -63,18 +63,11 @@ fun Int.toK(): Int = 4 * this + 3
  */
 fun Int.toN(): Int = (this - 3) / 4
 
-fun State.addRow(rowBelow: List<Char?>): List<List<Char?>> {
-    return rowBelow.indices.map {
-        listOf(rowBelow[it]) + (getOrNull(it) ?: emptyList())
+fun State.addRow(rowBelow: List<Char?>): List<List<Char>> {
+    return rowBelow.indices.map { index ->
+        rowBelow[index]?.let { listOf(it) + (getOrNull(index) ?: emptyList()) } ?: emptyList()
     }
 }
-
-// investigate:
-// fun State.addRow(rowBelow: List<Char?>): List<List<Char>> {
-//    return rowBelow.indices.mapNotNull {
-//        rowBelow.getOrNull(it)?.let { char -> listOf(char) + (getOrNull(it) ?: emptyList())}
-//    }
-//}
 
 fun List<String>.readState(): State {
     return takeWhile { it[1] != '1' }.fold(emptyList()) { stateAbove, newRow ->
