@@ -8,14 +8,12 @@ class Day5Test : FunSpec({
     test("readState1") {
         """
             [A]
-             1
         """.trimIndent().lines().readState() shouldBe listOf(listOf('A'))
     }
 
     test("readState2") {
         """
             [A] [B]
-             1   2
         """.trimIndent().lines().readState() shouldBe listOf(listOf('A'), listOf('B'))
     }
 
@@ -23,7 +21,6 @@ class Day5Test : FunSpec({
         """
             [D]
             [A] [B] [C]
-             1   2   3
         """.trimIndent().lines().readState() shouldBe listOf(listOf('A', 'D'), listOf('B'), listOf('C'))
     }
 
@@ -31,7 +28,6 @@ class Day5Test : FunSpec({
         """
                 [D]
             [A] [B] [C]
-             1   2   3
         """.trimIndent().lines().readState() shouldBe listOf(listOf('A'), listOf('B', 'D'), listOf('C'))
     }
 
@@ -39,7 +35,6 @@ class Day5Test : FunSpec({
         """
                     [D]
             [A] [B] [C]
-             1   2   3
         """.trimIndent().lines().readState() shouldBe listOf(listOf('A'), listOf('B'), listOf('C', 'D'))
     }
 

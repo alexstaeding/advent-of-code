@@ -2,6 +2,7 @@ package aoc
 
 typealias State = List<List<Char>>
 typealias MoveCmd = State.(count: Int, from: Int, to: Int) -> State
+
 val cmdRegex = "move (?<count>[1-9][0-9]*) from (?<from>[1-9][0-9]*) to (?<to>[1-9][0-9]*)".toRegex()
 
 fun String.day5a(): String = day5(State::move)
@@ -10,7 +11,7 @@ fun String.day5b(): String = day5(State::moveTogether)
 private fun String.day5(moveCmd: MoveCmd): String {
     val (commands: List<String>, initialState: State) = lineSequence()
         .partition { it.startsWith("move") }
-        .let { (commands, state) -> commands to state.readState().map { it } }
+        .let { (commands, state) -> commands to state.takeWhile { it[1] != '1' }.readState() }
     return commands
         .fold(initialState) { state, command -> state.applyCommand(command, moveCmd) }
         .map { it.last() }
@@ -42,15 +43,13 @@ fun State.moveTogether(count: Int, from: Int, to: Int): State = mapIndexed { i, 
     }
 }
 
-fun State.addRow(r: List<Char?>): List<List<Char>> = r.mapIndexed { i, c ->
+fun List<String>.readState(): State = fold(emptyList()) { prev: State, row: String -> prev.addRow(row.toCols()) }
+
+fun State.addRow(row: List<Char?>): State = row.mapIndexed { i, c ->
     c?.let { listOf(it) + (getOrNull(i) ?: emptyList()) } ?: emptyList()
 }
 
-fun List<String>.readState(): State = takeWhile { it[1] != '1' }.fold(emptyList()) { s, r ->
-    s.addRow(r.getCols())
-}
-
-fun String.getCols() = mapIndexedNotNull { i, c -> (i + 1).takeIf { c == '[' } }.toSet().let { indices ->
+fun String.toCols() = mapIndexedNotNull { i, c -> (i + 1).takeIf { c == '[' } }.toSet().let { indices ->
     (0..(length - 3) / 4).map { n ->
         val k = 4 * n + 1
         if (k in indices) this[k] else null
