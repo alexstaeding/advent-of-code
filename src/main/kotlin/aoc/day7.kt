@@ -1,5 +1,17 @@
 package aoc
 
+
+fun String.day7a(): Int = parse().traverseDirs().filter { it.size <= 100_000 }.sumOf { it.size }
+
+const val totalDiskSpace = 70_000_000
+const val neededUnusedSpace = 30_000_000
+
+fun String.day7b(): Int {
+    val root = parse()
+    val neededSpace = neededUnusedSpace - (totalDiskSpace - root.size)
+    return root.traverseDirs().filter { it.size > neededSpace }.minOf { it.size }
+}
+
 sealed interface FileSystemNode {
     val name: String
     val size: Int
@@ -11,6 +23,9 @@ data class Directory(override val name: String) : FileSystemNode {
     val children = mutableListOf<FileSystemNode>()
     override val size: Int by lazy { children.sumOf { it.size } }
 }
+
+fun String.parse() =
+    splitToSequence("\n").iterator().apply { assertNext("$ cd /") }.parseDir("/")
 
 fun Directory.traverseDirs(): Sequence<FileSystemNode> {
     val queue = ArrayDeque<FileSystemNode>()
@@ -26,16 +41,16 @@ fun Directory.traverseDirs(): Sequence<FileSystemNode> {
     }
 }
 
-fun parseDirectory(rootName: String, lines: Iterator<String>): Directory {
+fun Iterator<String>.parseDir(rootName: String): Directory {
     val dir = Directory(rootName)
-    lines.assertNext("$ ls")
-    while (lines.hasNext()) {
-        val next = lines.next()
+    assertNext("$ ls")
+    while (hasNext()) {
+        val next = next()
         if (next == "$ cd ..") {
             break
         } else if (next.startsWith("$ cd")) {
             val childName = next.substringAfter("$ cd ")
-            dir.children += parseDirectory(childName, lines)
+            dir.children += parseDir(childName)
             continue
         }
         val (size, name) = next.split(" ", limit = 2)
@@ -46,44 +61,5 @@ fun parseDirectory(rootName: String, lines: Iterator<String>): Directory {
     return dir
 }
 
-fun String.parse(): Directory {
-    val iterator = splitToSequence("\n").iterator()
-    iterator.assertNext("$ cd /")
-    return parseDirectory("/", iterator)
-}
-
-fun Directory.print(indent: String = "") {
-    println("$indent$name")
-    children.forEach {
-        when (it) {
-            is Directory -> it.print("$indent  ")
-            is File -> println("$indent  ${it.name} ${it.size}")
-        }
-    }
-}
-
-fun Directory.collectChildren(map: MutableMap<String, FileSystemNode>, parentPath: String = "") {
-    map["$parentPath/$name"] = this
-    children.forEach {
-        when (it) {
-            is Directory -> it.collectChildren(map, "$parentPath/$name")
-            is File -> map["$parentPath/$name/${it.name}"] = it
-        }
-    }
-}
-
-fun Iterator<String>.assertNext(expected: String) {
-    val next = next()
-    check(next == expected) { "Expected '$expected' but got '$next'" }
-}
-
-fun String.day7a(): Int = parse().traverseDirs().filter { it.size <= 100_000 }.sumOf { it.size }
-
-const val totalDiskSpace = 70_000_000
-const val neededUnusedSpace = 30_000_000
-
-fun String.day7b(): Int {
-    val root = parse()
-    val neededSpace = neededUnusedSpace - (totalDiskSpace - root.size)
-    return root.traverseDirs().filter { it.size > neededSpace }.minOf { it.size }
-}
+fun Iterator<String>.assertNext(expected: String) =
+    next().let { check(it == expected) { "Expected '$expected' but got '$it'" } }
