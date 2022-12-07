@@ -1,6 +1,5 @@
 package aoc
 
-
 fun String.day7a(): Int = parse().traverseDirs().filter { it.size <= 100_000 }.sumOf { it.size }
 
 const val totalDiskSpace = 70_000_000
@@ -46,16 +45,13 @@ fun Iterator<String>.parseDir(rootName: String): Directory {
     assertNext("$ ls")
     while (hasNext()) {
         val next = next()
-        if (next == "$ cd ..") {
-            break
-        } else if (next.startsWith("$ cd")) {
-            val childName = next.substringAfter("$ cd ")
-            dir.children += parseDir(childName)
-            continue
-        }
-        val (size, name) = next.split(" ", limit = 2)
-        if (size != "dir") {
-            dir.children += File(name, size.toInt())
+        when (val cd = next.substringAfter("$ cd ", "")) {
+            "" -> {
+                val (size, name) = next.split(" ", limit = 2)
+                if (size != "dir") dir.children.add(File(name, size.toInt()))
+            }
+            ".." -> break
+            else -> dir.children.add(parseDir(cd))
         }
     }
     return dir
