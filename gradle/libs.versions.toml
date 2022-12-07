@@ -6,3 +6,4 @@ kotest = "io.kotest:kotest-runner-junit5-jvm:5.5.4"
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "11.0.0" }
