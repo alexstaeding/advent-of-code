@@ -12,6 +12,20 @@ data class Directory(override val name: String) : FileSystemNode {
     override val size: Int by lazy { children.sumOf { it.size } }
 }
 
+fun Directory.traverseDirs(): Sequence<FileSystemNode> {
+    val queue = ArrayDeque<FileSystemNode>()
+    queue.add(this)
+    return sequence {
+        while (queue.isNotEmpty()) {
+            val node = queue.removeFirst()
+            yield(node)
+            if (node is Directory) {
+                node.children.filterIsInstanceTo<Directory, _>(queue)
+            }
+        }
+    }
+}
+
 fun parseDirectory(rootName: String, lines: Iterator<String>): Directory {
     val dir = Directory(rootName)
     lines.assertNext("$ ls")
@@ -63,21 +77,13 @@ fun Iterator<String>.assertNext(expected: String) {
     check(next == expected) { "Expected '$expected' but got '$next'" }
 }
 
-fun main() {
-    val root = getInput(7).parse()
-    val allDirs = mutableMapOf<String, FileSystemNode>()
-    root.collectChildren(allDirs)
+fun String.day7a(): Int = parse().traverseDirs().filter { it.size <= 100_000 }.sumOf { it.size }
 
-    val smallDirs = allDirs.values.filterIsInstance<Directory>().filter { it.size <= 100_000 }
-    println("Part A: ${smallDirs.sumOf { it.size }}")
+const val totalDiskSpace = 70_000_000
+const val neededUnusedSpace = 30_000_000
 
-    val totalDiskSpace = 70_000_000
-    val neededUnusedSpace = 30_000_000
-    val initialFreeSpace = totalDiskSpace - root.size
-    val neededSpace = neededUnusedSpace - initialFreeSpace
-    val smallestDir = allDirs.values
-        .filterIsInstance<Directory>()
-        .filter { it.size > neededSpace }
-        .minBy { it.size }
-    println("Part B: ${smallestDir.size}")
+fun String.day7b(): Int {
+    val root = parse()
+    val neededSpace = neededUnusedSpace - (totalDiskSpace - root.size)
+    return root.traverseDirs().filter { it.size > neededSpace }.minOf { it.size }
 }
