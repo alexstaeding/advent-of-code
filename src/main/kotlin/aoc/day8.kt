@@ -1,12 +1,13 @@
 package aoc
 
-
-fun main() {
-    getInput(8).day8a().also { println(it) }
-}
 fun String.day8a(): Int {
     val forest = split("\n").map { line -> line.map { it.digitToInt() } }
     return forest.indices.sumOf { y -> forest[y].indices.count { x -> forest.isVisible((Pos(y, x))) } }
+}
+
+fun String.day8b(): Int {
+    val forest = split("\n").map { line -> line.map { it.digitToInt() } }
+    return forest.indices.maxOf { y -> forest[y].indices.maxOf { x -> forest.getViewingDistance((Pos(y, x))) } }
 }
 
 typealias Forest = List<List<Int>>
@@ -28,4 +29,16 @@ fun Forest.isVisible(pos: Pos): Boolean = Dir.values().any { isVisible(this[pos]
 fun Forest.isVisible(og: Int, pos: Pos, dir: Dir): Boolean {
     if (pos !in this) return true
     return og > this[pos.moveOne(dir)] && isVisible(og, pos.moveOne(dir), dir)
+}
+
+fun Forest.getViewingDistance(pos: Pos): Int = Dir.values().fold(1) { a, b -> a * getViewingDistance(this[pos], pos, b) }
+
+fun Forest.getViewingDistance(og: Int, pos: Pos, dir: Dir): Int {
+    if (pos !in this) return -1
+    val newPos = pos.moveOne(dir)
+    return when {
+        og == this[newPos] -> 1
+        og > this[newPos] -> 1 + getViewingDistance(og, pos.moveOne(dir), dir)
+        else -> 1
+    }
 }
