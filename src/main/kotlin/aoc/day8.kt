@@ -2,38 +2,38 @@ package aoc
 
 fun String.day8a(): Int {
     val forest = split("\n").map { line -> line.map { it.digitToInt() } }
-    return forest.indices.sumOf { y -> forest[y].indices.count { x -> forest.isVisible((Pos(y, x))) } }
+    return forest.indices.sumOf { y -> forest[y].indices.count { x -> forest.isVisible((Pos8(y, x))) } }
 }
 
 fun String.day8b(): Int {
     val forest = split("\n").map { line -> line.map { it.digitToInt() } }
-    return forest.indices.maxOf { y -> forest[y].indices.maxOf { x -> forest.getViewingDistance((Pos(y, x))) } }
+    return forest.indices.maxOf { y -> forest[y].indices.maxOf { x -> forest.getViewingDistance((Pos8(y, x))) } }
 }
 
-typealias Forest = List<List<Int>>
+private typealias Forest8 = List<List<Int>>
 
-data class Pos(val y: Int, val x: Int)
-enum class Dir { N, E, S, W }
+private data class Pos8(val y: Int, val x: Int)
+private enum class Dir8 { N, E, S, W }
 
-fun Pos.moveOne(dir: Dir): Pos = when (dir) {
-    Dir.N -> copy(y = y - 1)
-    Dir.E -> copy(x = x + 1)
-    Dir.S -> copy(y = y + 1)
-    Dir.W -> copy(x = x - 1)
+private fun Pos8.moveOne(dir: Dir8): Pos8 = when (dir) {
+    Dir8.N -> copy(y = y - 1)
+    Dir8.E -> copy(x = x + 1)
+    Dir8.S -> copy(y = y + 1)
+    Dir8.W -> copy(x = x - 1)
 }
 
-operator fun Forest.get(pos: Pos) = getOrNull(pos.y)?.getOrNull(pos.x) ?: -1
-operator fun Forest.contains(pos: Pos) = getOrNull(pos.y)?.getOrNull(pos.x) != null
-fun Forest.isVisible(pos: Pos): Boolean = Dir.values().any { isVisible(this[pos], pos, it) }
+private operator fun Forest8.get(pos: Pos8) = getOrNull(pos.y)?.getOrNull(pos.x) ?: -1
+private operator fun Forest8.contains(pos: Pos8) = getOrNull(pos.y)?.getOrNull(pos.x) != null
+private fun Forest8.isVisible(pos: Pos8): Boolean = Dir8.values().any { isVisible(this[pos], pos, it) }
 
-fun Forest.isVisible(og: Int, pos: Pos, dir: Dir): Boolean {
+private fun Forest8.isVisible(og: Int, pos: Pos8, dir: Dir8): Boolean {
     if (pos !in this) return true
     return og > this[pos.moveOne(dir)] && isVisible(og, pos.moveOne(dir), dir)
 }
 
-fun Forest.getViewingDistance(pos: Pos): Int = Dir.values().fold(1) { a, b -> a * getViewingDistance(this[pos], pos, b) }
+private fun Forest8.getViewingDistance(pos: Pos8): Int = Dir8.values().fold(1) { a, b -> a * getViewingDistance(this[pos], pos, b) }
 
-fun Forest.getViewingDistance(og: Int, pos: Pos, dir: Dir): Int {
+private fun Forest8.getViewingDistance(og: Int, pos: Pos8, dir: Dir8): Int {
     if (pos !in this) return -1
     val newPos = pos.moveOne(dir)
     return when {
