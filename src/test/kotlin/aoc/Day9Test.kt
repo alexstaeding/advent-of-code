@@ -40,4 +40,19 @@ class Day9Test : FunSpec({
     test("moveLeft10") {
         "L 10".day9a() shouldBe 10
     }
+    test("basicExample") {
+        """
+            R 4
+            U 4
+            L 3
+            D 1
+            R 4
+            D 1
+            L 5
+            R 2
+        """.trimIndent().day9a() shouldBe 13
+    }
+    test("inputFileA") {
+        getInput(9).day9a() shouldBe 6181
+    }
 })

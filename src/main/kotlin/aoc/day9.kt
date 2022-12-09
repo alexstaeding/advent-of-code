@@ -6,9 +6,8 @@ import kotlin.math.abs
 // return number of positions the tail visited
 fun String.day9a(): Int {
     return lineSequence().map { it.split(" ") }.fold(State9()) { state, (dir, count) ->
-        println("State: $state, dir: $dir, count: $count")
         state.moveHead(Dir9.valueOf(dir), count.toInt())
-    }.also { println("Final state: $it") }.tailVisited
+    }.tailVisited.size
 }
 
 // top left is 0,0
@@ -21,7 +20,7 @@ private data class State9(
     // the current position of the tail of the rope
     val tail: Pos9 = Pos9(0, 0),
     // the number of positions the tail has previously visited
-    val tailVisited: Int = 1,
+    val tailVisited: Set<Pos9> = setOf(Pos9(0, 0)),
 )
 
 // the rope can only move in four directions
@@ -35,24 +34,11 @@ private fun Pos9.moveOne(dir: Dir9): Pos9 = when (dir) {
     Dir9.R -> copy(x = x + 1)
 }
 
-private fun State9.calculateNewTailPos(newHead: Pos9): Pos9 {
-    // calculate relative position of head to tail
-    val rel = Pos9(newHead.y - tail.y, newHead.x - tail.x)
-    if (rel.y == 0) {
-        if (abs(rel.x) < 2) {
-            return tail
-        }
-        check(rel.x == -2 || rel.x == 2) { "invalid relative position: $rel" }
-        return Pos9(tail.y, tail.x + rel.x / abs(rel.x))
-    }
-    if (rel.x == 0) {
-        if (abs(rel.y) < 2) {
-            return tail
-        }
-        check(rel.y == -2 || rel.y == 2) { "invalid relative position: $rel" }
-        return Pos9(tail.y + rel.y / abs(rel.y), tail.x)
-    }
-    return tail
+private fun Pos9.isTouching(other: Pos9): Boolean = abs(x - other.x) <= 1 && abs(y - other.y) <= 1
+
+private fun State9.calculateNewTailPos(newHead: Pos9, newHeadDir: Dir9): Pos9 {
+    if (newHead.isTouching(tail)) return tail
+    return head
 }
 
 private fun State9.moveHead(dir: Dir9, count: Int): State9 {
@@ -66,9 +52,7 @@ private fun State9.moveHead(dir: Dir9, count: Int): State9 {
 
 private fun State9.moveHead(dir: Dir9): State9 = head.moveOne(dir).let { newHead ->
     // calculate new tail position
-    val newTail = calculateNewTailPos(newHead)
-    // calculate new tail visited
-    val newTailVisited = if (newTail == tail) tailVisited else tailVisited + 1
+    val newTail = calculateNewTailPos(newHead, dir)
     // return new state
-    State9(newHead, newTail, newTailVisited)
+    State9(newHead, newTail, tailVisited + newTail)
 }
