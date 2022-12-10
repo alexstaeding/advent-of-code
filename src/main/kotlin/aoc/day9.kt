@@ -1,7 +1,6 @@
 package aoc
 
 import kotlin.math.abs
-import kotlin.math.absoluteValue
 
 fun String.day9a(): Int = day9(1)
 fun String.day9b(): Int = day9(10)
@@ -16,6 +15,7 @@ private fun String.day9(tailCount: Int): Int {
     }.also { println(it) }
     println("tail visited")
     println(tailVisited.joinToString("\n"))
+    printTailVisited()
     return tailVisited.size
 }
 
@@ -36,24 +36,38 @@ private data class State9(
     constructor(tailCount: Int) : this(tail = initializeLink9(Pos9(0, 0), tailCount))
 }
 
-private fun State9.printState(dir: Dir9) {
+private fun printGrid(gridBlock: (grid: Array<CharArray>, topLeft: Pos9, topRight: Pos9) -> Unit) {
     val topLeftBounds = Pos9(-15, -20)
     val bottomRightBounds = Pos9(5, 20)
     val width = bottomRightBounds.x - topLeftBounds.x
-    repeat((width - 1) / 2) { print('=') }
-    print(" $dir ")
-    repeat((width - 1) / 2) { print('=') }
+    repeat(width) { print('=') }
     println()
-    val grid = Array(bottomRightBounds.y - topLeftBounds.y + 1) { Array(bottomRightBounds.x - topLeftBounds.x + 1) { '.' } }
+    val grid = Array(bottomRightBounds.y - topLeftBounds.y + 1) { CharArray(bottomRightBounds.x - topLeftBounds.x + 1) { '.' } }
+    gridBlock(grid, topLeftBounds, bottomRightBounds)
     grid[-topLeftBounds.y][-topLeftBounds.x] = 'S'
-    var link = tail
-    var num = 1
-    while (link.next != null) {
-        grid[link.current.y - topLeftBounds.y][link.current.x - topLeftBounds.x] = "${num++}".single()
-        link = link.next!!
-    }
-    grid[head.y - topLeftBounds.y][head.x - topLeftBounds.x] = 'H'
     grid.forEach { println(it.joinToString("")) }
+}
+
+private fun State9.printState(dir: Dir9) {
+    printGrid { grid, topLeftBounds, _ ->
+        var link = tail
+        var num = 1
+        while (link.next != null) {
+            grid[link.current.y - topLeftBounds.y][link.current.x - topLeftBounds.x] = "${num++}".single()
+            link = link.next!!
+        }
+        grid[head.y - topLeftBounds.y][head.x - topLeftBounds.x] = 'H'
+    }
+}
+
+private val tailVisited = mutableSetOf<Pos9>()
+
+fun printTailVisited() {
+    printGrid { grid, topLeft, topRight ->
+        tailVisited.forEach { pos ->
+            grid[pos.y - topLeft.y][pos.x - topLeft.x] = '#'
+        }
+    }
 }
 
 private data class Link9(
@@ -91,18 +105,28 @@ private fun Link9.calculate(oldHead: Pos9, newHead: Pos9): Link9 {
     if (current.isTouching(newHead)) {
         return this
     }
-    
-    val newLink = Link9(oldHead)
+
+    // check if current is in same row and column as newHead
+    val newCurrent = if (current.x == newHead.x || current.y == newHead.y) {
+        // move one in the direction of newHead
+        current.moveOne(current.dirTo(newHead))
+    } else {
+        val vectorToNewHead = newHead - current
+        check(vectorToNewHead.x != 0 && vectorToNewHead.y != 0)
+        current.copy(
+            x = current.x + vectorToNewHead.x / abs(vectorToNewHead.x),
+            y = current.y + vectorToNewHead.y / abs(vectorToNewHead.y),
+        )
+    }
+    val newLink = Link9(newCurrent)
     if (next == null) {
         // last element in the rope
-        tailVisited.add(oldHead)
+        tailVisited.add(newCurrent)
     }
-    newLink.next = next?.calculate(current, oldHead)
+    newLink.next = next?.calculate(current, newCurrent)
     println("Calculating new link ${next?.current}->$current => ${newLink.next?.current}->${newLink.current} :: HEAD $oldHead->$newHead")
     return newLink
 }
-
-private val tailVisited = mutableSetOf<Pos9>()
 
 private fun State9.moveHead(dir: Dir9, count: Int): State9 {
     printState(dir)
