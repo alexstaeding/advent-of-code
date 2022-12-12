@@ -1,5 +1,6 @@
 package aoc
 
+import java.util.PriorityQueue
 import kotlin.math.abs
 
 fun main() {
@@ -9,10 +10,9 @@ fun main() {
 fun String.day12a(): Int {
     val state = readState()
     val startPos = state.find(0)
-    val goalPos = state.find(-27)
     state.print()
     println("startPos = $startPos")
-    val steps = state.findGoal(startPos, goalPos)
+    val steps = state.findGoal()
     checkNotNull(steps) { "No solution" }
     println(steps.withIndex().joinToString("\n") { (i, step) -> "$i: $step" })
     return steps.size
@@ -20,66 +20,65 @@ fun String.day12a(): Int {
 
 var counter = 0
 
-private fun State12.findGoal(current: Pos12, goal: Pos12, steps: List<Pos12> = listOf()): List<Pos12>? {
-    if (++counter % 1000000 == 0) {
-        println("checking $steps :: $current")
-    }
-    if (steps.size > 30) {
-//        println("Too many steps $current")
-        return null
-    }
-    if (current == goal && this[steps.last()] == 26) {
-        // goal
-        return steps
-    }
-//    pos to (steps + current)
-    val height = this[current]!!
-    val calls = Dir12.values().asSequence()
-        .map { dir -> current.moveOne(dir) }
-        .filter { it !in steps }
-        .mapNotNull { pos ->
-            val delta = (this[pos] ?: return@mapNotNull null) - height
-            if (delta > 1) return@mapNotNull null
-            Triple(delta, pos, steps + current)
-        }//.toList()
-//    println("calls =\n${calls.joinToString("\n") { "${it.first}, ${it.third.last()}->${it.second}" }}")
-//    val sortedCalls = calls
-        .sortedWith(
-            compareBy(
-                { (_, pos, _) -> pos.distanceTo(goal) },
-                { (delta, _, _) -> -delta },
-            ),
-        )
-        .forEach { (_, pos, steps) ->
-            findGoal(pos, goal, steps)?.let { return it }
-        }
 
-//    println("sortedCalls =\n${sortedCalls.joinToString("\n") { "${it.first}, ${it.third.last()}->${it.second}" }}")
+// A star search
+private fun State12.findGoal(): List<Pos12>? {
+    val queue = PriorityQueue<Node12> { a, b -> compareValuesBy(a, b) { it.pathSize + it.distance } }
+    queue.add(this[start] ?: return null)
+    while (queue.isNotEmpty()) {
+        val node = queue.poll()
+        println("node = $node")
+        if (node.pos == goal) {
+            return node.path
+        }
+        for (dir in Dir12.values()) {
+            val newNode = this[node.pos.moveOne(dir)] ?: continue
+            if (newNode.height > node.height + 1) continue
+            if (newNode.pathSize > node.pathSize + 1) {
+                newNode.path.clear()
+                newNode.path.addAll(node.path)
+                newNode.path.add(newNode.pos)
+                queue.add(newNode)
+            }
+        }
+    }
     return null
 }
 
-private data class Move12(val dir: Dir12, val pos: Pos12)
 private data class Pos12(val y: Int, val x: Int) {
-    override fun toString(): String {
-        return "($y, $x)"
-    }
+    override fun toString(): String = "($y, $x)"
 }
 
 private enum class Dir12 { N, E, S, W }
 
-private typealias State12 = List<List<Int>>
+private data class State12(
+    val heightmap: List<List<Node12>>,
+    val start: Pos12,
+    val goal: Pos12,
+)
+
+private data class Node12(
+    val pos: Pos12,
+    val height: Int,
+    val distance: Int,
+    val path: MutableList<Pos12> = mutableListOf(),
+    val isStart: Boolean = false,
+) {
+    val pathSize: Int
+        get() = if (path.isEmpty() && !isStart) Int.MAX_VALUE shr 1 else path.size
+}
 
 private fun State12.print() {
-    forEach { ints ->
+    heightmap.forEach { ints ->
         println(ints.joinToString("") { "($it)" })
     }
 }
 
-private operator fun State12.get(pos: Pos12): Int? = getOrNull(pos.y)?.getOrNull(pos.x)
+private operator fun State12.get(pos: Pos12): Node12? = heightmap.getOrNull(pos.y)?.getOrNull(pos.x)
 
-private fun State12.find(num: Int): Pos12 {
-    return mapIndexedNotNull { y, ints ->
-        ints.indexOf(num)
+private fun State12.find(height: Int): Pos12 {
+    return heightmap.mapIndexedNotNull { y, nodes ->
+        nodes.indexOfFirst { it.height == height }
             .takeIf { it >= 0 }
             ?.let { y to it }
     }.first().toPos()
@@ -97,7 +96,35 @@ private fun Pos12.distanceTo(other: Pos12): Int = abs(y - other.y) + abs(x - oth
 
 private fun String.readState(): State12 {
     // read height map
-    // a = 0
+    // S = 0
+    // a = 1
     // z = 26
-    return lines().map { line -> line.map { if (it == 'S') 0 else 1 + it.code - 'a'.code } }
+    // E = 27
+    var startPos: Pos12? = null
+    var endPos: Pos12? = null
+    val heights = lines().mapIndexed { y, line ->
+        line.mapIndexed { x, c ->
+            when (c) {
+                'S' -> {
+                    startPos = Pos12(y, x)
+                    0
+                }
+                'E' -> {
+                    endPos = Pos12(y, x)
+                    27
+                }
+
+                else -> 1 + c.code - 'a'.code
+            }
+        }
+    }
+    val start = checkNotNull(startPos) { "No start position" }
+    val goal = checkNotNull(endPos) { "No end position" }
+    val heightMap = heights.mapIndexed { y, line ->
+        line.mapIndexed { x, h ->
+            val pos = Pos12(y, x)
+            Node12(pos, h, pos.distanceTo(goal), isStart = pos == start)
+        }
+    }
+    return State12(heightMap, start, goal)
 }
