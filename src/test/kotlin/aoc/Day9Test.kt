@@ -40,6 +40,16 @@ class Day9Test : FunSpec({
     test("moveLeft10") {
         "L 10".day9a() shouldBe 10
     }
+    test("touching") {
+        Pos9(0,0).isTouching(Pos9(0,1)) shouldBe true
+        Pos9(0,0).isTouching(Pos9(1,0)) shouldBe true
+        Pos9(0,0).isTouching(Pos9(1,1)) shouldBe true
+        Pos9(0,0).isTouching(Pos9(1,-1)) shouldBe true
+        Pos9(0,0).isTouching(Pos9(-1,1)) shouldBe true
+        Pos9(0,0).isTouching(Pos9(-1,-1)) shouldBe true
+        Pos9(0,0).isTouching(Pos9(2,2)) shouldBe false
+        Pos9(0,0).isTouching(Pos9(2,1)) shouldBe false
+    }
     test("basicExampleA") {
         """
             R 4
@@ -78,5 +88,8 @@ class Day9Test : FunSpec({
             L 25
             U 20
         """.trimIndent().day9b() shouldBe 36
+    }
+    test("inputFileB") {
+        getInput(9).day9b() shouldBe 2386
     }
 })

@@ -3,7 +3,7 @@ package aoc
 import kotlin.math.abs
 
 fun String.day9a(): Int = day9(1)
-fun String.day9b(): Int = day9(10)
+fun String.day9b(): Int = day9(9)
 
 // simulate rope physics
 // return number of positions the tail visited
@@ -12,15 +12,12 @@ private fun String.day9(tailCount: Int): Int {
     tailVisited.add(Pos9(0, 0))
     lineSequence().map { it.split(" ") }.fold(State9(tailCount)) { state, (dir, count) ->
         state.moveHead(Dir9.valueOf(dir), count.toInt())
-    }.also { println(it) }
-    println("tail visited")
-    println(tailVisited.joinToString("\n"))
-    printTailVisited()
+    }
     return tailVisited.size
 }
 
 // top left is 0,0
-private data class Pos9(val y: Int, val x: Int) {
+data class Pos9(val y: Int, val x: Int) {
     override fun toString(): String = "($y, $x)"
 }
 
@@ -48,13 +45,17 @@ private fun printGrid(gridBlock: (grid: Array<CharArray>, topLeft: Pos9, topRigh
     grid.forEach { println(it.joinToString("")) }
 }
 
-private fun State9.printState(dir: Dir9) {
+private fun State9.printState() {
     printGrid { grid, topLeftBounds, _ ->
-        var link = tail
+        var link: Link9? = tail
         var num = 1
-        while (link.next != null) {
+        while (link != null) {
             grid[link.current.y - topLeftBounds.y][link.current.x - topLeftBounds.x] = "${num++}".single()
-            link = link.next!!
+            if (link.next == null) {
+                break
+            } else {
+                link = link.next
+            }
         }
         grid[head.y - topLeftBounds.y][head.x - topLeftBounds.x] = 'H'
     }
@@ -97,9 +98,31 @@ private fun Pos9.moveOne(dir: Dir9): Pos9 = when (dir) {
     Dir9.R -> copy(x = x + 1)
 }
 
-private fun Pos9.isTouching(other: Pos9): Boolean = abs(x - other.x) <= 1 && abs(y - other.y) <= 1
+fun Pos9.isTouching(other: Pos9): Boolean = abs(x - other.x) <= 1 && abs(y - other.y) <= 1
 
 private fun Pos9.isDiagonal(other: Pos9): Boolean = abs(x - other.x) == 1 && abs(y - other.y) == 1
+
+fun main() {
+    println(Pos9(0, 0).moveInDirection(Pos9(-1, -1)))
+}
+
+fun Pos9.moveInDirection(pos: Pos9): Pos9 {
+    return if (x == pos.x || y == pos.y) {
+        // move one in the direction of newHead
+        moveOne(dirTo(pos))
+    } else {
+        // 0 0 y
+        // x 0 0
+        // -1, 2
+        // -1, 1
+        val vectorToNewHead = pos - this
+        check(vectorToNewHead.x != 0 && vectorToNewHead.y != 0)
+        return copy(
+            y = y + vectorToNewHead.y / abs(vectorToNewHead.y),
+            x = x + vectorToNewHead.x / abs(vectorToNewHead.x),
+        )
+    }
+}
 
 private fun Link9.calculate(oldHead: Pos9, newHead: Pos9): Link9 {
     if (current.isTouching(newHead)) {
@@ -107,29 +130,18 @@ private fun Link9.calculate(oldHead: Pos9, newHead: Pos9): Link9 {
     }
 
     // check if current is in same row and column as newHead
-    val newCurrent = if (current.x == newHead.x || current.y == newHead.y) {
-        // move one in the direction of newHead
-        current.moveOne(current.dirTo(newHead))
-    } else {
-        val vectorToNewHead = newHead - current
-        check(vectorToNewHead.x != 0 && vectorToNewHead.y != 0)
-        current.copy(
-            x = current.x + vectorToNewHead.x / abs(vectorToNewHead.x),
-            y = current.y + vectorToNewHead.y / abs(vectorToNewHead.y),
-        )
-    }
+    val newCurrent = current.moveInDirection(newHead)
     val newLink = Link9(newCurrent)
     if (next == null) {
         // last element in the rope
         tailVisited.add(newCurrent)
     }
     newLink.next = next?.calculate(current, newCurrent)
-    println("Calculating new link ${next?.current}->$current => ${newLink.next?.current}->${newLink.current} :: HEAD $oldHead->$newHead")
     return newLink
 }
 
 private fun State9.moveHead(dir: Dir9, count: Int): State9 {
-    printState(dir)
+//    printState()
     return if (count < 2) {
         moveHead(dir)
     } else {
