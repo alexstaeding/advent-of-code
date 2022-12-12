@@ -16,7 +16,7 @@ class Day11Test : FunSpec({
             0,
             ArrayDeque(listOf(92, 73, 86, 83, 65, 51, 55, 93)),
             { it * 5 },
-            { it % 11 == 0 },
+            { it % 11 == 0L },
             3,
             4
         )
@@ -54,6 +54,5 @@ class Day11Test : FunSpec({
     }
     test("inputFileA") {
         getInput(11).day11a() shouldBe 0
-        // > 120754
     }
 })
