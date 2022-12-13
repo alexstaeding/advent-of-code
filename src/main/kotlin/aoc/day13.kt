@@ -1,17 +1,26 @@
 package aoc
 
-fun main() {
-    getInput(13).day13().forEach {
-        println(it)
-    }
-}
-
-// list of indices of pairs that are in the right order
-fun String.day13(): List<Int> {
+fun String.day13a(): Int {
     return split("\n\n").mapIndexedNotNull { id, group ->
         val (first, second) = group.lines().map { it.parseBrackets() }
         if (first < second) id + 1 else null
-    }
+    }.sum()
+}
+
+fun String.day13b(): Int {
+    val bracketsFromList = lines()
+        .filter { it.isNotBlank() }
+        .map { it.parseBrackets() }
+    val e2 = "[[2]]".parseBrackets()
+    val e6 = "[[6]]".parseBrackets()
+    val sorted = (bracketsFromList + e2 + e6).sorted()
+    return sorted.mapIndexedNotNull { i, it ->
+        if (it == e2 || it == e6) {
+            i + 1
+        } else {
+            null
+        }
+    }.fold(1) { a, b -> a * b }
 }
 
 fun String.parseBrackets(position: Int): Pair<ListElement, Int> {
@@ -26,7 +35,11 @@ fun String.parseBrackets(position: Int): Pair<ListElement, Int> {
             }
             ']' -> return SubList(list) to i
             ',' -> Unit
-            else -> list.add(Value(substring(i).substringBefore(',').substringBefore(']').toInt()))
+            else -> {
+                val num = substring(i).substringBefore(',').substringBefore(']')
+                list.add(Value(num.toInt()))
+                i += num.length - 1
+            }
         }
         ++i
     }
@@ -49,7 +62,6 @@ data class SubList(val elements: List<ListElement>) : ListElement {
 
             is Value -> compareTo(SubList(listOf(other)))
         }
-        println("compared $this ${if (result < 0) "<" else if (result == 0) "==" else ">"} $other")
         return result
     }
 }
@@ -61,7 +73,6 @@ data class Value(val value: Int) : ListElement {
             is SubList -> SubList(listOf(this)).compareTo(other)
             is Value -> value.compareTo(other.value)
         }
-        println("compared $this ${if (result < 0) "<" else if (result == 0) "==" else ">"} $other")
         return result
     }
 }

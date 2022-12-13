@@ -26,6 +26,10 @@ class Day13Test : FunSpec({
         "[[[]]]".parseBrackets() shouldBe
             SubList(listOf(SubList(listOf(SubList(listOf())))))
     }
+    test("singleLineMultipleDigits") {
+        "[123,1,5]".parseBrackets() shouldBe
+            SubList(listOf(Value(123), Value(1), Value(5)))
+    }
     test("singleLineComplex") {
         "[1,[2,[3,[4,[5,6,7]]]],8,9]".parseBrackets() shouldBe
             SubList(
@@ -78,33 +82,6 @@ class Day13Test : FunSpec({
     test("compareBasic8") {
         "[1,[2,[3,[4,[5,6,7]]]],8,9]".parseBrackets() shouldBeGreaterThan "[1,[2,[3,[4,[5,6,0]]]],8,9]".parseBrackets()
     }
-    test("basicExampleA") {
-        """
-            [1,1,3,1,1]
-            [1,1,5,1,1]
-
-            [[1],[2,3,4]]
-            [[1],4]
-
-            [9]
-            [[8,7,6]]
-
-            [[4,4],4,4]
-            [[4,4],4,4,4]
-
-            [7,7,7,7]
-            [7,7,7]
-
-            []
-            [3]
-
-            [[[]]]
-            [[]]
-
-            [1,[2,[3,[4,[5,6,7]]]],8,9]
-            [1,[2,[3,[4,[5,6,0]]]],8,9]
-        """.trimIndent().day13() shouldBe listOf(1, 2, 4, 6)
-    }
     test("advanced1") {
         "[[9,2],[],[10,[6,1],5,4]]".parseBrackets() shouldBeLessThan
             "[[[9,[],3],[6],1],[[1],[[9,1],0,7,10],2,0]]".parseBrackets()
@@ -126,6 +103,9 @@ class Day13Test : FunSpec({
             "[[4,[]],[[[8,2,4,6,10]],2,[7,[3],[]]],[10,10,2,[2],4],[],[[2,9,[10,2,8]],4]]".parseBrackets()
     }
     test("inputFileA") {
-        getInput(13).day13().sum() shouldBe 5659
+        getInput(13).day13a() shouldBe 5659
+    }
+    test("inputFileB") {
+        getInput(13).day13b() shouldBe 22110
     }
 })
