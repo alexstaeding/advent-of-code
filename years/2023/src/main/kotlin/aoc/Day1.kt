@@ -1,13 +1,6 @@
 package aoc
 
-fun Sequence<String>.day1a(): Int {
-    return map { line ->
-        buildString {
-            append(line.first { it.isDigit() })
-            append(line.last { it.isDigit() })
-        }.toInt()
-    }.sum()
-}
+fun Sequence<String>.day1a(): Int = map { line -> "${line.first { it.isDigit() }}${line.last { it.isDigit() }}".toInt() }.sum()
 
 private val replacements = mapOf(
     "nine" to "9",
@@ -22,26 +15,24 @@ private val replacements = mapOf(
 )
 
 fun interface Matcher {
-    fun reset() = Unit
     fun read(c: Char): String?
 }
 
 class PatternMatcher(private val pattern: String, private val result: String) : Matcher {
     private var matches: Int = 0
-    override fun reset() {
-        matches = 0
-    }
 
     override fun read(c: Char): String? {
-        when (c) {
-            pattern[matches] -> matches++
-            pattern[0] -> matches = 1
-            else -> reset()
+        matches = when (c) {
+            pattern[matches] -> matches + 1
+            pattern[0] -> 1
+            else -> 0
         }
         return if (matches == pattern.length) {
-            reset()
+            matches = 0
             result
-        } else null
+        } else {
+            null
+        }
     }
 }
 
@@ -59,18 +50,14 @@ fun String.day1b(): Int {
     while (true) {
         if (forwardMatch == null) {
             forwardMatch = forwardMatchers.firstNotNullOfOrNull { it.read(this[left]) }
-        }
-        if (backwardMatch == null) {
-            backwardMatch = backwardMatchers.firstNotNullOfOrNull { it.read(this[right]) }
-        }
-        if (forwardMatch != null && backwardMatch != null) {
-            return (forwardMatch + backwardMatch).toInt()
-        }
-        if (forwardMatch == null) {
             left++
         }
         if (backwardMatch == null) {
+            backwardMatch = backwardMatchers.firstNotNullOfOrNull { it.read(this[right]) }
             right--
+        }
+        if (forwardMatch != null && backwardMatch != null) {
+            return (forwardMatch + backwardMatch).toInt()
         }
     }
 }
