@@ -155,7 +155,7 @@ private val spec: FunSpec.() -> Unit = {
         """.trimIndent().day10a() shouldBe 13140
     }
     test("inputFileA") {
-        getInput(10).day10a() shouldBe 12460
+        Framework.getInput(10).readText().day10a() shouldBe 12460
     }
 }
 

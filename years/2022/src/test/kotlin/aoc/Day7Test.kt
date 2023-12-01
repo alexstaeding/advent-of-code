@@ -5,10 +5,10 @@ import io.kotest.matchers.shouldBe
 
 private val spec: FunSpec.() -> Unit = {
     test("inputFileA") {
-        getInput(7).day7a() shouldBe 1644735
+        Framework.getInput(7).readText().day7a() shouldBe 1644735
     }
     test("inputFileB") {
-        getInput(7).day7b() shouldBe 1300850
+        Framework.getInput(7).readText().day7b() shouldBe 1300850
     }
 }
 

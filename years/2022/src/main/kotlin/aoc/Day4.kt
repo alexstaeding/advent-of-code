@@ -1,9 +1,5 @@
 package aoc
 
-fun main() {
-    println(getInput(4).day4b())
-}
-
 fun String.day4a(): Int = split("\n").sumOf { line ->
     line.split(",")
         .map { it.toRange().toSet() }

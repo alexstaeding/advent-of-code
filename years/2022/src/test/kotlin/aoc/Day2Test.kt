@@ -270,7 +270,7 @@ private val spec: FunSpec.() -> Unit = {
     }
 
     test("inputFile") {
-        getInput(2).day2() shouldBe 8295
+        Framework.getInput(2).readText().day2() shouldBe 8295
     }
 }
 

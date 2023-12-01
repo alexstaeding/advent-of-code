@@ -107,10 +107,10 @@ private val spec: FunSpec.() -> Unit = {
             "[[4,[]],[[[8,2,4,6,10]],2,[7,[3],[]]],[10,10,2,[2],4],[],[[2,9,[10,2,8]],4]]".parseBrackets()
     }
     test("inputFileA") {
-        getInput(13).day13a() shouldBe 5659
+        Framework.getInput(13).readText().day13a() shouldBe 5659
     }
     test("inputFileB") {
-        getInput(13).day13b() shouldBe 22110
+        Framework.getInput(13).readText().day13b() shouldBe 22110
     }
 }
 

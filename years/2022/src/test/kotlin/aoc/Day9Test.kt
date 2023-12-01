@@ -63,7 +63,7 @@ private val spec: FunSpec.() -> Unit = {
         """.trimIndent().day9a() shouldBe 13
     }
     test("inputFileA") {
-        getInput(9).day9a() shouldBe 6181
+        Framework.getInput(9).readText().day9a() shouldBe 6181
     }
     test("basicExampleB") {
         """
@@ -90,7 +90,7 @@ private val spec: FunSpec.() -> Unit = {
         """.trimIndent().day9b() shouldBe 36
     }
     test("inputFileB") {
-        getInput(9).day9b() shouldBe 2386
+        Framework.getInput(9).readText().day9b() shouldBe 2386
     }
 }
 

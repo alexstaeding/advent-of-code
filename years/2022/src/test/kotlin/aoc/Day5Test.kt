@@ -58,11 +58,11 @@ private val spec: FunSpec.() -> Unit = {
     }
 
     test("inputFileA") {
-        getInput(5).day5a() shouldBe "TWSGQHNHL"
+        Framework.getInput(5).readText().day5a() shouldBe "TWSGQHNHL"
     }
 
     test("inputFileB") {
-        getInput(5).day5b() shouldBe "JNRSCDWPP"
+        Framework.getInput(5).readText().day5b() shouldBe "JNRSCDWPP"
     }
 }
 

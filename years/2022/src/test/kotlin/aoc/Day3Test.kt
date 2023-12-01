@@ -47,7 +47,7 @@ private val spec: FunSpec.() -> Unit = {
     }
 
     test("inputFileA") {
-        getInput(3).day3a() shouldBe 7997
+        Framework.getInput(3).readText().day3a() shouldBe 7997
     }
 
     test("basicMultiLineB1") {
@@ -78,7 +78,7 @@ private val spec: FunSpec.() -> Unit = {
     }
 
     test("inputFileB") {
-        getInput(3).day3b() shouldBe 2545
+        Framework.getInput(3).readText().day3b() shouldBe 2545
     }
 }
 
