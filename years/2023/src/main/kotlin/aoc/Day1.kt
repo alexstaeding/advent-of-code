@@ -14,7 +14,7 @@ private val replacements = mapOf(
     "one" to "1",
 )
 
-fun interface Matcher {
+interface Matcher {
     fun read(c: Char): String?
 }
 
@@ -40,26 +40,9 @@ object DigitMatcher : Matcher {
     override fun read(c: Char): String? = if (c.isDigit()) c.toString() else null
 }
 
-fun String.day1b(): Int {
-    val forwardMatchers = replacements.map { PatternMatcher(it.key, it.value) } + DigitMatcher
-    val backwardMatchers = replacements.map { PatternMatcher(it.key.reversed(), it.value) } + DigitMatcher
-    var left = 0
-    var right = length - 1
-    var forwardMatch: String? = null
-    var backwardMatch: String? = null
-    while (true) {
-        if (forwardMatch == null) {
-            forwardMatch = forwardMatchers.firstNotNullOfOrNull { it.read(this[left]) }
-            left++
-        }
-        if (backwardMatch == null) {
-            backwardMatch = backwardMatchers.firstNotNullOfOrNull { it.read(this[right]) }
-            right--
-        }
-        if (forwardMatch != null && backwardMatch != null) {
-            return (forwardMatch + backwardMatch).toInt()
-        }
-    }
+fun seek(line: String, reversed: Boolean = false): String {
+    val matchers = replacements.map { (k, v) -> PatternMatcher(if (reversed) k.reversed() else k, v) } + DigitMatcher
+    return line.firstNotNullOf { c -> matchers.firstNotNullOfOrNull { it.read(c) } }
 }
 
-fun Sequence<String>.day1b(): Int = map { it.day1b() }.sum()
+fun Sequence<String>.day1b(): Int = map { "${seek(it)}${seek(it.reversed(), true)}".toInt() }.sum()
