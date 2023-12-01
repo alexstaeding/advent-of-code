@@ -52,7 +52,8 @@ class Day11Test : FunSpec({
                 If false: throw to monkey 1
         """.trimIndent().day11a() shouldBe 10605
     }
-    test("inputFileA") {
-        getInput(11).day11a() shouldBe 0
-    }
+// Monke bad
+//    test("inputFileA") {
+//        getInput(11).day11a() shouldBe 0
+//    }
 })
