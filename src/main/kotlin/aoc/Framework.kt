@@ -21,4 +21,6 @@ fun DayInput.getReader(): BufferedReader {
 
 fun DayInput.readText(): String = getReader().readText().trimEnd()
 
+fun DayInput.readLines(): List<String> = getReader().readLines()
+
 fun DayInput.lineSequence(): Sequence<String> = getReader().lineSequence()

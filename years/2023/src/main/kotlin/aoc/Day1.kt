@@ -21,26 +21,58 @@ private val replacements = mapOf(
     "one" to "1",
 )
 
-fun Sequence<String>.day1b(): Int {
-    return map { line ->
-        val firstIntIndex = line.indexOfFirst { it.isDigit() }
-        val firstLettersIndex = replacements.map { line.indexOf(it.key) to it.value }
-            .filter { it.first >= 0 }.minByOrNull { it.first }
-        val first = if (firstIntIndex >= 0 && firstIntIndex < (firstLettersIndex?.first ?: Int.MAX_VALUE)) {
-            line[firstIntIndex].toString()
-        } else {
-            firstLettersIndex!!.second
-        }
-
-        val lastIntIndex = line.indexOfLast { it.isDigit() }
-        val lastLettersIndex = replacements.map { line.lastIndexOf(it.key) to it.value }
-            .filter { it.first >= 0 }.maxByOrNull { it.first }
-        val last = if (lastIntIndex > (lastLettersIndex?.first ?: Int.MIN_VALUE)) {
-            line[lastIntIndex].toString()
-        } else {
-            lastLettersIndex!!.second
-        }
-
-        (first + last).toInt()
-    }.sum()
+fun interface Matcher {
+    fun reset() = Unit
+    fun read(c: Char): String?
 }
+
+class PatternMatcher(private val pattern: String, private val result: String) : Matcher {
+    private var matches: Int = 0
+    override fun reset() {
+        matches = 0
+    }
+
+    override fun read(c: Char): String? {
+        when (c) {
+            pattern[matches] -> matches++
+            pattern[0] -> matches = 1
+            else -> reset()
+        }
+        return if (matches == pattern.length) {
+            reset()
+            result
+        } else null
+    }
+}
+
+object DigitMatcher : Matcher {
+    override fun read(c: Char): String? = if (c.isDigit()) c.toString() else null
+}
+
+fun String.day1b(): Int {
+    val forwardMatchers = replacements.map { PatternMatcher(it.key, it.value) } + DigitMatcher
+    val backwardMatchers = replacements.map { PatternMatcher(it.key.reversed(), it.value) } + DigitMatcher
+    var left = 0
+    var right = length - 1
+    var forwardMatch: String? = null
+    var backwardMatch: String? = null
+    while (true) {
+        if (forwardMatch == null) {
+            forwardMatch = forwardMatchers.firstNotNullOfOrNull { it.read(this[left]) }
+        }
+        if (backwardMatch == null) {
+            backwardMatch = backwardMatchers.firstNotNullOfOrNull { it.read(this[right]) }
+        }
+        if (forwardMatch != null && backwardMatch != null) {
+            return (forwardMatch + backwardMatch).toInt()
+        }
+        if (forwardMatch == null) {
+            left++
+        }
+        if (backwardMatch == null) {
+            right--
+        }
+    }
+}
+
+fun Sequence<String>.day1b(): Int = map { it.day1b() }.sum()
