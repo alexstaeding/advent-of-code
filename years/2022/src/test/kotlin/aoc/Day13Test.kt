@@ -5,7 +5,7 @@ import io.kotest.matchers.comparables.shouldBeGreaterThan
 import io.kotest.matchers.comparables.shouldBeLessThan
 import io.kotest.matchers.shouldBe
 
-class Day13Test : FunSpec({
+private val spec: FunSpec.() -> Unit = {
     test("singleLine1") {
         "[1,1,3,1,1]".parseBrackets() shouldBe
             SubList(listOf(Value(1), Value(1), Value(3), Value(1), Value(1)))
@@ -40,22 +40,26 @@ class Day13Test : FunSpec({
                             Value(2),
                             SubList(
                                 listOf(
-                                    Value(3), SubList(
+                                    Value(3),
+                                    SubList(
                                         listOf(
-                                            Value(4), SubList(
+                                            Value(4),
+                                            SubList(
                                                 listOf(
-                                                    Value(5), Value(6), Value(7)
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
+                                                    Value(5),
+                                                    Value(6),
+                                                    Value(7),
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ),
                     ),
                     Value(8),
                     Value(9),
-                )
+                ),
             )
     }
     test("compareBasic1") {
@@ -108,4 +112,6 @@ class Day13Test : FunSpec({
     test("inputFileB") {
         getInput(13).day13b() shouldBe 22110
     }
-})
+}
+
+class Day13Test : FunSpec(spec)

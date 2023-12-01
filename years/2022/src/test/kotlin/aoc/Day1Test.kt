@@ -3,7 +3,7 @@ package aoc
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 
-class Day1Test : FunSpec({
+private val spec: FunSpec.() -> Unit = {
     test("simple") {
         """
             1
@@ -19,4 +19,6 @@ class Day1Test : FunSpec({
             1
         """.trimIndent().day1().take(3).toList() shouldBe listOf(15, 6, 2)
     }
-})
+}
+
+class Day1Test : FunSpec(spec)

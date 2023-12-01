@@ -3,7 +3,8 @@ package aoc
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 
-class Day11Test : FunSpec({
+private val spec: FunSpec.() -> Unit = {
+
     test("parseOne") {
         """
             Monkey 0:
@@ -18,7 +19,7 @@ class Day11Test : FunSpec({
             { it * 5 },
             { it % 11 == 0L },
             3,
-            4
+            4,
         )
     }
     test("basicExampleA") {
@@ -56,4 +57,6 @@ class Day11Test : FunSpec({
 //    test("inputFileA") {
 //        getInput(11).day11a() shouldBe 0
 //    }
-})
+}
+
+class Day11Test : FunSpec(spec)

@@ -3,7 +3,7 @@ package aoc
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 
-class Day5Test : FunSpec({
+private val spec: FunSpec.() -> Unit = {
 
     test("readState1") {
         """
@@ -64,4 +64,6 @@ class Day5Test : FunSpec({
     test("inputFileB") {
         getInput(5).day5b() shouldBe "JNRSCDWPP"
     }
-})
+}
+
+class Day5Test : FunSpec(spec)

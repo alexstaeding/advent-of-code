@@ -16,7 +16,8 @@ import io.kotest.matchers.shouldBe
  * Y = draw
  * Z = win
  */
-class Day2Test : FunSpec({
+private val spec: FunSpec.() -> Unit = {
+
     test("verySimple") {
         """
             A Y
@@ -271,4 +272,6 @@ class Day2Test : FunSpec({
     test("inputFile") {
         getInput(2).day2() shouldBe 8295
     }
-})
+}
+
+class Day2Test : FunSpec(spec)

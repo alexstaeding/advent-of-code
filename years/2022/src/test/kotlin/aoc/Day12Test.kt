@@ -3,7 +3,8 @@ package aoc
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 
-class Day12Test : FunSpec({
+private val spec: FunSpec.() -> Unit = {
+
     test("basicExampleA") {
         """
             Sabqponm
@@ -28,4 +29,6 @@ class Day12Test : FunSpec({
     test("inputFileB") {
         getInput(12).day12b() shouldBe 388
     }
-})
+}
+
+class Day12Test : FunSpec(spec)

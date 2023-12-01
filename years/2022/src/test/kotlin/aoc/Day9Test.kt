@@ -3,7 +3,7 @@ package aoc
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 
-class Day9Test : FunSpec({
+private val spec: FunSpec.() -> Unit = {
     test("moveUp1") {
         "U 1".day9a() shouldBe 1
     }
@@ -41,14 +41,14 @@ class Day9Test : FunSpec({
         "L 10".day9a() shouldBe 10
     }
     test("touching") {
-        Pos9(0,0).isTouching(Pos9(0,1)) shouldBe true
-        Pos9(0,0).isTouching(Pos9(1,0)) shouldBe true
-        Pos9(0,0).isTouching(Pos9(1,1)) shouldBe true
-        Pos9(0,0).isTouching(Pos9(1,-1)) shouldBe true
-        Pos9(0,0).isTouching(Pos9(-1,1)) shouldBe true
-        Pos9(0,0).isTouching(Pos9(-1,-1)) shouldBe true
-        Pos9(0,0).isTouching(Pos9(2,2)) shouldBe false
-        Pos9(0,0).isTouching(Pos9(2,1)) shouldBe false
+        Pos9(0, 0).isTouching(Pos9(0, 1)) shouldBe true
+        Pos9(0, 0).isTouching(Pos9(1, 0)) shouldBe true
+        Pos9(0, 0).isTouching(Pos9(1, 1)) shouldBe true
+        Pos9(0, 0).isTouching(Pos9(1, -1)) shouldBe true
+        Pos9(0, 0).isTouching(Pos9(-1, 1)) shouldBe true
+        Pos9(0, 0).isTouching(Pos9(-1, -1)) shouldBe true
+        Pos9(0, 0).isTouching(Pos9(2, 2)) shouldBe false
+        Pos9(0, 0).isTouching(Pos9(2, 1)) shouldBe false
     }
     test("basicExampleA") {
         """
@@ -92,4 +92,6 @@ class Day9Test : FunSpec({
     test("inputFileB") {
         getInput(9).day9b() shouldBe 2386
     }
-})
+}
+
+class Day9Test : FunSpec(spec)

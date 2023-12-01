@@ -1,20 +1,24 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-@Suppress("DSL_SCOPE_VIOLATION") // https://youtrack.jetbrains.com/issue/KTIJ-19369
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktlint)
 }
 
-dependencies {
-    testImplementation(libs.kotest)
-}
+subprojects {
+    apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
-tasks {
-    test {
-        useJUnitPlatform()
+    dependencies {
+        testImplementation(rootProject.libs.kotest)
     }
-    withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
+
+    tasks {
+        test {
+            useJUnitPlatform()
+        }
+        withType<KotlinCompile> {
+            kotlinOptions.jvmTarget = "17"
+        }
     }
 }

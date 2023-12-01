@@ -61,7 +61,9 @@ fun String.day10b() {
 fun getSignalStrength(ctr: Int, x: Int): Int {
     return if ((ctr + 20) % 40 == 0) {
         ctr * x
-    } else 0
+    } else {
+        0
+    }
 }
 
 fun printPixel(ctr: Int, x: Int) {

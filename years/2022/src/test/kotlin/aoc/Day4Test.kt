@@ -6,7 +6,7 @@ import io.kotest.matchers.shouldBe
 /**
  * How many ranges contain the adjacent range?
  */
-class Day4Test : FunSpec({
+private val spec: FunSpec.() -> Unit = {
     test("verySimpleNoContains") {
         "4-8,3-7".day4a() shouldBe 0
     }
@@ -39,4 +39,6 @@ class Day4Test : FunSpec({
     test("inputFileB") {
         getInput(4).day4b() shouldBe 854
     }
-})
+}
+
+class Day4Test : FunSpec(spec)

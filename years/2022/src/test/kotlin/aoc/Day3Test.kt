@@ -3,7 +3,7 @@ package aoc
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 
-class Day3Test : FunSpec({
+private val spec: FunSpec.() -> Unit = {
 
     test("toScore") {
         'a'.toScore() shouldBe 1
@@ -80,4 +80,6 @@ class Day3Test : FunSpec({
     test("inputFileB") {
         getInput(3).day3b() shouldBe 2545
     }
-})
+}
+
+class Day3Test : FunSpec(spec)
