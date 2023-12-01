@@ -1,0 +1,1 @@
+println(java.io.File("f").readLines().map{setOf("one","two","three","four","five","six","seven","eight","nine").mapIndexed{i,s->s to s[0]+"${i+1}"+s.last()}.fold(it){a,(k,v)->a.replace(k,v)}}.sumOf{"${it.first{it.isDigit()}}${it.last{it.isDigit()}}".toInt()})

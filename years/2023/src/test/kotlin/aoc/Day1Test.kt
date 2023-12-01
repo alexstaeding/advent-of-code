@@ -16,6 +16,9 @@ private val spec: FunSpec.() -> Unit = {
     test("inputFileB") {
         Framework.getInput(1).lineSequence().day1b() shouldBe 54728
     }
+    test("inputFileBAlt") {
+        Framework.getInput(1).lineSequence().day1bAlt() shouldBe 54728
+    }
 }
 
 class Day1Test : FunSpec(spec)

@@ -29,3 +29,9 @@ fun String.seek(reversed: Boolean = false): String {
 }
 
 fun Sequence<String>.day1b(): Int = map { "${it.seek()}${it.seek(true)}".toInt() }.sum()
+
+private val altReplacements = listOf("one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
+    .mapIndexed { i, s -> s to s.first() + (i + 1).toString() + s.last() }
+
+fun Sequence<String>.day1bAlt(): Int = map { altReplacements.fold(it) { acc, (k, v) -> acc.replace(k, v) } }
+    .sumOf { line -> "${line.first { it.isDigit() }}${line.last { it.isDigit() }}".toInt() }
