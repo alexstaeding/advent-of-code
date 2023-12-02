@@ -1,12 +1,6 @@
 package aoc
 
 import kotlin.math.max
-import kotlin.math.min
-
-fun main() {
-//    println("Result: " + Framework.getInput(2, "a", useExample = true).readText().day2a())
-    println("Result: " + Framework.getInput(2).readText().day2a())
-}
 
 val state = mutableMapOf(
     "red" to 12,
@@ -15,18 +9,32 @@ val state = mutableMapOf(
 )
 
 fun String.day2a(): Int {
-    var possible = 0
-    var power = 0
-    split("\n")
+    return split("\n")
         .asSequence()
         .map { it.substringAfter(": ") }
         .map { it.split("; ") }
         .mapIndexed { index, strings -> index + 1 to strings.map { it.split(", ").map { x -> x.split(" ").zipWithNext().single() } } }
         .toList()
-        .forEach { (index, subGame: List<List<Pair<String, String>>>) ->
-            val stateCopy = state.toMutableMap()
-            println(stateCopy)
-            var f = true
+        .sumOf { (index, subGame) ->
+            if (subGame.all { take ->
+                    val stateCopy = state.toMutableMap()
+                    for ((num, color) in take) {
+                        stateCopy.computeIfPresent(color) { _, v -> v - num.toInt() }
+                    }
+                    stateCopy.all { (_, v) -> v >= 0 }
+                }) {
+                index
+            } else 0
+        }
+}
+
+fun String.day2b(): Int {
+    return split("\n")
+        .asSequence()
+        .map { it.substringAfter(": ") }
+        .map { it.split("; ") }
+        .map { strings -> strings.map { it.split(", ").map { x -> x.split(" ").zipWithNext().single() } } }
+        .sumOf { subGame ->
             val maxMap = mutableMapOf(
                 "red" to 0,
                 "green" to 0,
@@ -34,13 +42,9 @@ fun String.day2a(): Int {
             )
             for (take in subGame) {
                 for ((num, color) in take) {
-                    stateCopy.computeIfPresent(color) { _, v ->
-                        maxMap[color] = max(maxMap[color]!!, num.toInt())
-                        v - num.toInt()
-                    }
+                    maxMap.computeIfPresent(color) { _, v -> max(v, num.toInt()) }
                 }
             }
-            power += maxMap.asSequence().fold(1) { acc, (_, v) -> acc * max(0, v) }
+            maxMap.values.reduce { a, v -> a * v }
         }
-    return power
 }
