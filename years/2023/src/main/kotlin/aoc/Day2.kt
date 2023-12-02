@@ -25,18 +25,16 @@ fun String.day2a(): Int = splitToSequence("\n")
     }
 
 fun String.day2b(): Int = splitToSequence("\n")
-    .map { it.substringAfter(": ").split("; ") }
-    .map { strings -> strings.map { it.split(", ").map { x -> x.split(" ").zipWithNext().single() } } }
-    .sumOf { subGame ->
+    .map { it.substringAfter(": ").split(", ", "; ") }
+    .map { strings -> strings.map { it.split(" ").zipWithNext().single() } }
+    .sumOf { takes ->
         val maxMap = mutableMapOf(
             "red" to 0,
             "green" to 0,
             "blue" to 0,
         )
-        for (takes in subGame) {
-            for ((num, color) in takes) {
-                maxMap.computeIfPresent(color) { _, v -> max(v, num.toInt()) }
-            }
+        for ((num, color) in takes) {
+            maxMap.computeIfPresent(color) { _, v -> max(v, num.toInt()) }
         }
         maxMap.values.reduce { a, v -> a * v }
     }
