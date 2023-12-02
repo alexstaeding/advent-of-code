@@ -16,21 +16,28 @@ fun String.day2a(): Int {
     split("\n")
         .asSequence()
         .map { it.substringAfter(": ") }
-        .map { it.split(", ", "; ") }
-        .mapIndexed { index, strings -> index + 1 to strings.map { it.split(" ").zipWithNext().single() } }
+        .map { it.split("; ") }
+        .mapIndexed { index, strings -> index + 1 to strings.map { it.split(", ").map { x -> x.split(" ").zipWithNext().single() } } }
         .toList()
-        .forEach { (index, games) ->
-            val stateCopy = state.toMutableMap()
-            println("Computing game $index")
+        .forEach { (index, subGame: List<List<Pair<String, String>>>) ->
+            var stateCopy = state.toMutableMap()
             println(stateCopy)
-            games.forEach { (num, color) ->
-                stateCopy.computeIfPresent(color) { _, v -> v - num.toInt() }
+            var f = true
+            for (take in subGame) {
+                for ((num, color) in take) {
+                    stateCopy.computeIfPresent(color) { _, v -> v - num.toInt() }
+                }
+                if (!stateCopy.all { (_, v) -> v >= 0 }) {
+                    f = false
+                    break
+                }
+                stateCopy = state.toMutableMap()
             }
-            println(stateCopy)
-            if (stateCopy.all { (_, v) -> v >= 0 }) {
-                println("Possible: $index")
+            if (f) {
                 possible += index
             }
+            println(stateCopy)
+
             // reset
         }
     return possible
