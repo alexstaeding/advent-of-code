@@ -1,1 +1,1 @@
-println(java.io.File("f").readLines().map{setOf("one","two","three","four","five","six","seven","eight","nine").mapIndexed{i,s->s to s[0]+"${i+1}"+s.last()}.fold(it){a,(k,v)->a.replace(k,v)}}.sumOf{"${it.first{it.isDigit()}}${it.last{it.isDigit()}}".toInt()})
+println(java.io.File("1").readLines().map{setOf("o1ne","t2wo","t3hree","f4our","f5ive","s6ix","s7even","e8ight","n9ine").fold(it){a,k->a.replace(k.removeRange(1,2),k)}}.sumOf{"${it.first{it.isDigit()}}${it.last{it.isDigit()}}".toInt()})
