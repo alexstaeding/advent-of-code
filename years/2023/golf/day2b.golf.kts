@@ -1,0 +1,1 @@
+println(java.io.File("2").readLines().sumOf{mutableMapOf("red" to 0, "green" to 0, "blue" to 0).also{l->it.split(": ")[1].split("; ",", ").map{it.split(" ")}.forEach{(n,c)->l[c]=Math.max(l[c]!!,n.toInt())}}.values.reduce{a,v->a*v}})
