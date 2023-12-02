@@ -8,10 +8,8 @@ val state = mutableMapOf(
     "blue" to 14,
 )
 
-fun String.day2a(): Int = splitToSequence("\n")
-    .map { it.substringAfter(": ").split("; ") }
+fun Sequence<String>.day2a(): Int = map { it.substringAfter(": ").split("; ") }
     .mapIndexed { index, strings -> index + 1 to strings.map { it.split(", ").map { x -> x.split(" ").zipWithNext().single() } } }
-    .toList()
     .sumOf { (index, subGame) ->
         index.takeIf {
             subGame.all { takes ->
@@ -24,15 +22,9 @@ fun String.day2a(): Int = splitToSequence("\n")
         } ?: 0
     }
 
-fun String.day2b(): Int = splitToSequence("\n")
-    .map { it.substringAfter(": ").split(", ", "; ") }
-    .map { strings -> strings.map { it.split(" ").zipWithNext().single() } }
+fun Sequence<String>.day2b(): Int = map { line -> line.substringAfter(": ").split(", ", "; ").map { it.split(" ").zipWithNext().single() } }
     .sumOf { takes ->
-        val maxMap = mutableMapOf(
-            "red" to 0,
-            "green" to 0,
-            "blue" to 0,
-        )
+        val maxMap = state.mapValuesTo(mutableMapOf()) { 0 }
         for ((num, color) in takes) {
             maxMap.computeIfPresent(color) { _, v -> max(v, num.toInt()) }
         }
