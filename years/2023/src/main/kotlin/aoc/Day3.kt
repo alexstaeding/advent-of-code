@@ -1,14 +1,11 @@
 package aoc
 
-fun main() = Framework.getInput(3, useExample = false).readText().day3b().let { println(it) }
-
-typealias Grid = Array<CharArray>
+private typealias Grid = Array<CharArray>
 
 private data class Pos(val y: Int, val x: Int)
+private data class GearCandidate(val num: Int, val symbolPos: Set<Pos>)
 
 private operator fun Pos.plus(other: Pos) = Pos(y + other.y, x + other.x)
-
-private data class GearCandidate(val num: Int, val symbolPos: Set<Pos>)
 
 private fun Grid.checkSurround(point: Pos): Set<Pos> {
     val symbols = mutableSetOf<Pos>()
