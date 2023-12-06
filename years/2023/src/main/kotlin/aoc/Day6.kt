@@ -3,7 +3,7 @@ package aoc
 import java.io.BufferedReader
 
 fun main() {
-    Framework.getInput(6, useExample = false).getReader().day6a().let { println(it) }
+    Framework.getInput(6, useExample = false).getReader().day6b().let { println(it) }
 }
 
 fun BufferedReader.day6a(): Int {
@@ -15,4 +15,12 @@ fun BufferedReader.day6a(): Int {
             .map { t -> (time - t) * t }
             .count { it > distanceRecord }
     }.reduce { a, b -> a * b }
+}
+
+fun BufferedReader.day6b(): Int {
+    val time = readLine().split(":")[1].replace("\\s+".toRegex(), "").toLong()
+    val distanceRecord = readLine().split(":")[1].replace("\\s+".toRegex(), "").toLong()
+    return (0..time)
+        .map { t -> (time - t) * t }
+        .count { it > distanceRecord }
 }
