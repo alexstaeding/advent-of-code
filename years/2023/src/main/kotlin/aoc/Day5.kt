@@ -3,8 +3,6 @@ package aoc
 import kotlin.math.max
 import kotlin.math.min
 
-fun main() = Framework.getInput(5, useExample = false).readLines().day5b().let { println(it) }
-
 private data class Mapping(
     val dest: Long,
     val source: Long,
@@ -40,7 +38,7 @@ fun List<String>.day5a(): Long {
 }
 
 private fun LongRange.mapWith(mappings: List<Mapping>): List<LongRange> {
-    return mappings.filter { it.sourceRange.intersects(this) }.fold(listOf(this)) { acc, mapping ->
+    return mappings.fold(listOf(this)) { acc, mapping ->
         acc.flatMap {
             buildList {
                 // before source range
@@ -70,7 +68,7 @@ fun List<String>.day5b(): Long {
         .map { it.substringAfter("\n") }
         .map { it.split("\n").map { l -> l.toMapping() } }
 
-    return parts.foldIndexed(seeds) { i, nums, mappings ->
+    return parts.fold(seeds) { nums, mappings ->
         nums.flatMap { n ->
             n.mapWith(mappings)
         }
