@@ -11,10 +11,10 @@ private val spec: FunSpec.() -> Unit = {
         Framework.getInput(6, useExample = true).lineSequence().day6b() shouldBe 71503
     }
     test("inputFileA") {
-        Framework.getInput(6).getReader().lineSequence() shouldBe 2344708
+        Framework.getInput(6).getReader().lineSequence().day6a() shouldBe 2344708
     }
     test("inputFileB") {
-        Framework.getInput(6).getReader().lineSequence() shouldBe 30125202
+        Framework.getInput(6).getReader().lineSequence().day6b() shouldBe 30125202
     }
 }
 
