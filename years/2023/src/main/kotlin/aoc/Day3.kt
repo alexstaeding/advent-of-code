@@ -92,6 +92,8 @@ fun String.day3b(): Int {
             a.num * b.num
         } else if (twoCandidates.size > 2) {
             error("WTF $twoCandidates")
-        } else 0
+        } else {
+            0
+        }
     }
 }

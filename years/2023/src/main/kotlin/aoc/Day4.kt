@@ -1,8 +1,10 @@
 package aoc
 
 fun Sequence<String>.day4a(): Int = sumOf { line ->
-    when (val w = line.substringAfter(": ").split(" | ")
-        .map { "(\\d+)".toRegex().findAll(it).map { x -> x.value }.toSet() }.let { (l, r) -> l.intersect(r).count() }) {
+    when (
+        val w = line.substringAfter(": ").split(" | ")
+            .map { "(\\d+)".toRegex().findAll(it).map { x -> x.value }.toSet() }.let { (l, r) -> l.intersect(r).count() }
+    ) {
         0 -> 0
         else -> 1 shl w - 1
     }
