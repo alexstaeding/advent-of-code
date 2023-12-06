@@ -37,25 +37,24 @@ fun List<String>.day5a(): Long {
     }.min()
 }
 
-private fun LongRange.mapWith(mappings: List<Mapping>): List<LongRange> {
-    return mappings.fold(listOf(this)) { acc, mapping ->
-        acc.flatMap {
+private fun List<LongRange>.mapWith(mappings: List<Mapping>): List<LongRange> {
+    return mappings.fold(this to listOf<LongRange>()) { (untransformed, transformed), mapping ->
+        untransformed.flatMap {
             buildList {
                 // before source range
                 if (it.first < mapping.sourceRange.first) {
                     add(it.first..min(it.last, mapping.sourceRange.first - 1))
                 }
-                // in source range
-                if (it.intersects(mapping.sourceRange)) {
-                    add(max(it.first + mapping.destDelta, mapping.dest)..min(it.last + mapping.destDelta, mapping.destRange.last))
-                }
+
                 // after source range
                 if (it.last > mapping.sourceRange.last) {
                     add(max(it.first, mapping.sourceRange.last + 1)..it.last)
                 }
             }
+        } to transformed + untransformed.filter { it.intersects(mapping.sourceRange) }.map {
+            max(it.first + mapping.destDelta, mapping.dest)..min(it.last + mapping.destDelta, mapping.destRange.last)
         }
-    }
+    }.let { (a, b) -> a + b }
 }
 
 fun List<String>.day5b(): Long {
@@ -69,8 +68,6 @@ fun List<String>.day5b(): Long {
         .map { it.split("\n").map { l -> l.toMapping() } }
 
     return parts.fold(seeds) { nums, mappings ->
-        nums.flatMap { n ->
-            n.mapWith(mappings)
-        }
+        nums.mapWith(mappings)
     }.minOf { it.first }
 }
