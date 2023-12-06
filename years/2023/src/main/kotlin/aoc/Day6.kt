@@ -11,14 +11,12 @@ fun BufferedReader.day6a(): Int {
     return times.zip(records).map { (time, record) ->
         // for each speed
         (0..time)
-            .map { t -> (time - t) * t }
-            .count { it > record }
+            .count { t -> (time - t) * t > record }
     }.reduce { a, b -> a * b }
 }
 
 fun BufferedReader.day6b(): Int {
     val (time, record) = List(2) { readLine().split(":")[1].replace("\\s+".toRegex(), "").toLong() }
     return (0..time)
-        .map { t -> (time - t) * t }
-        .count { it > record }
+        .count { t -> (time - t) * t > record }
 }
