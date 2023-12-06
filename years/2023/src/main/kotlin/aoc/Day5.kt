@@ -22,52 +22,43 @@ private fun String.toMapping(): Mapping {
     return Mapping(dest, source, count)
 }
 
-fun List<String>.day5a(): Long {
-    val seeds = this[0].split(": ")[1].split(" ").map { it.toLong() }
-    val parts = asSequence().drop(2).joinToString("\n").split("\n\n")
-        .map { it.substringAfter("\n") }
-        .map { it.split("\n").map { l -> l.toMapping() } }
-
-    return parts.fold(seeds) { nums, mappings ->
+fun List<String>.day5a(): Long = asSequence().drop(2).joinToString("\n").split("\n\n")
+    .map { it.substringAfter("\n") }
+    .map { it.split("\n").map { l -> l.toMapping() } }.fold(
+        // input seeds
+        this[0].split(": ")[1].split(" ").map { it.toLong() },
+    ) { nums, mappings ->
         nums.map { n ->
             mappings.firstOrNull { (_, s, c) -> n in s..s + c }?.let { mapping ->
                 (n - mapping.source) + mapping.dest
             } ?: n
         }
     }.min()
-}
 
-private fun List<LongRange>.mapWith(mappings: List<Mapping>): List<LongRange> {
-    return mappings.fold(this to listOf<LongRange>()) { (untransformed, transformed), mapping ->
-        untransformed.flatMap {
-            buildList {
-                // before source range
-                if (it.first < mapping.sourceRange.first) {
-                    add(it.first..min(it.last, mapping.sourceRange.first - 1))
-                }
+fun List<String>.day5b(): Long = asSequence().drop(2).joinToString("\n").split("\n\n")
+    .map { it.substringAfter("\n") }
+    .map { it.split("\n").map { l -> l.toMapping() } }.fold(
+        // input seeds
+        "(\\d+) (\\d+)".toRegex().findAll(this[0].split(": ")[1])
+            .map { it.destructured }
+            .map { (a, b) -> a.toLong().let { x -> x..x + b.toLong() } }
+            .toList(),
+    ) { nums, mappings ->
+        mappings.fold(nums to listOf<LongRange>()) { (untransformed, transformed), mapping ->
+            untransformed.flatMap {
+                buildList {
+                    // before source range
+                    if (it.first < mapping.sourceRange.first) {
+                        add(it.first..min(it.last, mapping.sourceRange.first - 1))
+                    }
 
-                // after source range
-                if (it.last > mapping.sourceRange.last) {
-                    add(max(it.first, mapping.sourceRange.last + 1)..it.last)
+                    // after source range
+                    if (it.last > mapping.sourceRange.last) {
+                        add(max(it.first, mapping.sourceRange.last + 1)..it.last)
+                    }
                 }
+            } to transformed + untransformed.filter { it.intersects(mapping.sourceRange) }.map {
+                max(it.first + mapping.destDelta, mapping.dest)..min(it.last + mapping.destDelta, mapping.destRange.last)
             }
-        } to transformed + untransformed.filter { it.intersects(mapping.sourceRange) }.map {
-            max(it.first + mapping.destDelta, mapping.dest)..min(it.last + mapping.destDelta, mapping.destRange.last)
-        }
-    }.let { (a, b) -> a + b }
-}
-
-fun List<String>.day5b(): Long {
-    val seeds = "(\\d+) (\\d+)".toRegex().findAll(this[0].split(": ")[1])
-        .map { it.destructured }
-        .map { (a, b) -> a.toLong().let { x -> x..x + b.toLong() } }
-        .toList()
-
-    val parts = asSequence().drop(2).joinToString("\n").split("\n\n")
-        .map { it.substringAfter("\n") }
-        .map { it.split("\n").map { l -> l.toMapping() } }
-
-    return parts.fold(seeds) { nums, mappings ->
-        nums.mapWith(mappings)
+        }.let { (a, b) -> a + b }
     }.minOf { it.first }
-}
