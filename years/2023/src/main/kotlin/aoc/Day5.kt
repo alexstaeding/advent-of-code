@@ -23,8 +23,8 @@ private fun String.toMapping(): Mapping {
 }
 
 fun List<String>.day5a(): Long = asSequence().drop(2).joinToString("\n").split("\n\n")
-    .map { it.substringAfter("\n") }
-    .map { it.split("\n").map { l -> l.toMapping() } }.fold(
+    .map { it.split("\n").drop(1).map { l -> l.toMapping() } }
+    .fold(
         // input seeds
         this[0].split(": ")[1].split(" ").map { it.toLong() },
     ) { nums, mappings ->
@@ -36,12 +36,12 @@ fun List<String>.day5a(): Long = asSequence().drop(2).joinToString("\n").split("
     }.min()
 
 fun List<String>.day5b(): Long = asSequence().drop(2).joinToString("\n").split("\n\n")
-    .map { it.substringAfter("\n") }
-    .map { it.split("\n").map { l -> l.toMapping() } }.fold(
+    .map { it.split("\n").drop(1).map { l -> l.toMapping() } }
+    .fold(
         // input seeds
         "(\\d+) (\\d+)".toRegex().findAll(this[0].split(": ")[1])
             .map { it.destructured }
-            .map { (a, b) -> a.toLong().let { x -> x..x + b.toLong() } }
+            .map { (a, b) -> a.toLong().let { it..it + b.toLong() } }
             .toList(),
     ) { nums, mappings ->
         mappings.fold(nums to listOf<LongRange>()) { (untransformed, transformed), mapping ->
