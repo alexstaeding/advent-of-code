@@ -1,18 +1,18 @@
 package aoc
 
-private typealias Grid = Array<CharArray>
+private typealias Grid3 = Array<CharArray>
 
-private data class Pos(val y: Int, val x: Int)
-private data class GearCandidate(val num: Int, val symbolPos: Set<Pos>)
+private data class Pos3(val y: Int, val x: Int)
+private data class GearCandidate(val num: Int, val symbolPos: Set<Pos3>)
 
-private operator fun Pos.plus(other: Pos) = Pos(y + other.y, x + other.x)
+private operator fun Pos3.plus(other: Pos3) = Pos3(y + other.y, x + other.x)
 
-private fun Grid.checkSurround(point: Pos): Set<Pos> {
-    val symbols = mutableSetOf<Pos>()
+private fun Grid3.checkSurround(point: Pos3): Set<Pos3> {
+    val symbols = mutableSetOf<Pos3>()
     (-1..1).forEach { y ->
         (-1..1).forEach { x ->
             if (y != 0 || x != 0) {
-                val pos = point + Pos(x, y)
+                val pos = point + Pos3(x, y)
                 if (getOrNull(pos.y)?.getOrNull(pos.x)?.let { it != '.' && !it.isDigit() } == true) symbols += pos
             }
         }
@@ -36,7 +36,7 @@ fun String.day3a(): Int {
                 numHasStar = false
             }
             if (c.isDigit()) {
-                val pos = Pos(y, x)
+                val pos = Pos3(y, x)
                 lastNum = lastNum * 10 + c.digitToInt()
                 if (grid.checkSurround(pos).isNotEmpty()) {
                     numHasStar = true
@@ -55,12 +55,12 @@ fun String.day3a(): Int {
 fun String.day3b(): Int {
     val grid = lines().map { it.toCharArray() }.toTypedArray()
 
-    val allGearSymbols = mutableSetOf<Pos>()
+    val allGearSymbols = mutableSetOf<Pos3>()
     val candidates = mutableListOf<GearCandidate>()
 
     grid.withIndex().forEach { (y, row) ->
         var lastNum = 0
-        val lastSymbolPos = mutableSetOf<Pos>()
+        val lastSymbolPos = mutableSetOf<Pos3>()
         for ((x, c) in row.withIndex()) {
             if (!c.isDigit()) {
                 if (lastSymbolPos.isNotEmpty()) {
@@ -70,7 +70,7 @@ fun String.day3b(): Int {
                 lastSymbolPos.clear()
             }
             if (c.isDigit()) {
-                val pos = Pos(y, x)
+                val pos = Pos3(y, x)
                 lastNum = lastNum * 10 + c.digitToInt()
                 lastSymbolPos += grid.checkSurround(pos)
             } else {
