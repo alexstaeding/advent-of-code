@@ -42,16 +42,15 @@ fun String.day16a(): Int {
     val grid = lines().map { it.toList() }
     val queue = ArrayDeque<BeamPos>()
     queue.add(BeamPos(Pos16(0, 0), Dir16.RIGHT))
-    val visited = mutableSetOf<Pos16>()
+    val visited = mutableSetOf<BeamPos>()
 
     while (queue.isNotEmpty()) {
         val current = queue.removeFirst()
-        if (current.pos !in grid) {
+        if (current.pos !in grid || current in visited) {
             continue
         }
-        println("Visited ${visited.size}")
 
-        visited.add(current.pos)
+        visited.add(current)
         when (grid[current.pos]) {
             '|' -> {
                 when (current.dir) {
@@ -92,5 +91,5 @@ fun String.day16a(): Int {
             }
         }
     }
-    return visited.size
+    return visited.mapTo(mutableSetOf()) { it.pos }.size
 }
