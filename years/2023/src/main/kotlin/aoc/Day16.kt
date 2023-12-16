@@ -18,6 +18,7 @@ private enum class Dir16(val pos: Pos16) {
 private data class Beam(val pos: Pos16, val dir: Dir16)
 
 private fun Beam.redirect(dir: Dir16) = Beam(this.pos + dir.pos, dir)
+private fun Beam.continueStraight() = redirect(dir)
 
 fun main() {
     Framework.getInput(16, useExample = false).readText().day16b().let { println(it) }
@@ -33,46 +34,35 @@ private fun Grid16.doThing(start: Beam): Int {
         if (current.pos !in this || current in visited) {
             continue
         }
-
         visited.add(current)
         when (this[current.pos]) {
-            '|' -> {
-                when (current.dir) {
-                    Dir16.UP, Dir16.DOWN -> queue.add(Beam(current.pos + current.dir.pos, current.dir))
-                    Dir16.LEFT, Dir16.RIGHT -> {
-                        queue.add(current.redirect(Dir16.UP))
-                        queue.add(current.redirect(Dir16.DOWN))
-                    }
+            '|' -> when (current.dir) {
+                Dir16.UP, Dir16.DOWN -> queue.add(current.continueStraight())
+                Dir16.LEFT, Dir16.RIGHT -> {
+                    queue.add(current.redirect(Dir16.UP))
+                    queue.add(current.redirect(Dir16.DOWN))
                 }
             }
-            '-' -> {
-                when (current.dir) {
-                    Dir16.LEFT, Dir16.RIGHT -> queue.add(Beam(current.pos + current.dir.pos, current.dir))
-                    Dir16.UP, Dir16.DOWN -> {
-                        queue.add(current.redirect(Dir16.LEFT))
-                        queue.add(current.redirect(Dir16.RIGHT))
-                    }
+            '-' -> when (current.dir) {
+                Dir16.LEFT, Dir16.RIGHT -> queue.add(current.continueStraight())
+                Dir16.UP, Dir16.DOWN -> {
+                    queue.add(current.redirect(Dir16.LEFT))
+                    queue.add(current.redirect(Dir16.RIGHT))
                 }
             }
-            '/' -> {
-                when (current.dir) {
-                    Dir16.UP -> queue.add(current.redirect(Dir16.RIGHT))
-                    Dir16.DOWN -> queue.add(current.redirect(Dir16.LEFT))
-                    Dir16.LEFT -> queue.add(current.redirect(Dir16.DOWN))
-                    Dir16.RIGHT -> queue.add(current.redirect(Dir16.UP))
-                }
+            '/' -> when (current.dir) {
+                Dir16.UP -> queue.add(current.redirect(Dir16.RIGHT))
+                Dir16.DOWN -> queue.add(current.redirect(Dir16.LEFT))
+                Dir16.LEFT -> queue.add(current.redirect(Dir16.DOWN))
+                Dir16.RIGHT -> queue.add(current.redirect(Dir16.UP))
             }
-            '\\' -> {
-                when (current.dir) {
-                    Dir16.DOWN -> queue.add(current.redirect(Dir16.RIGHT))
-                    Dir16.UP -> queue.add(current.redirect(Dir16.LEFT))
-                    Dir16.RIGHT -> queue.add(current.redirect(Dir16.DOWN))
-                    Dir16.LEFT -> queue.add(current.redirect(Dir16.UP))
-                }
+            '\\' -> when (current.dir) {
+                Dir16.DOWN -> queue.add(current.redirect(Dir16.RIGHT))
+                Dir16.UP -> queue.add(current.redirect(Dir16.LEFT))
+                Dir16.RIGHT -> queue.add(current.redirect(Dir16.DOWN))
+                Dir16.LEFT -> queue.add(current.redirect(Dir16.UP))
             }
-            else -> {
-                queue.add(Beam(current.pos + current.dir.pos, current.dir))
-            }
+            else -> queue.add(current.continueStraight())
         }
     }
     return visited.mapTo(mutableSetOf()) { it.pos }.size
