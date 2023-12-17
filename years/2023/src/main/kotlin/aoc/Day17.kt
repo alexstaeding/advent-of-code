@@ -1,5 +1,6 @@
 package aoc
 
+import org.fusesource.jansi.Ansi
 import java.util.PriorityQueue
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -43,19 +44,12 @@ private operator fun Dir17.plus(n: Int): Dir17 =
 private operator fun Dir17.minus(n: Int): Dir17 =
     Dir17.entries[(ordinal - n + 4) % 4]
 
-//private fun Node17.countStraight(): Int {
-//    val prev = previous ?: return 1
-//    val dir = current.pos.directionTo(prev.current.pos)
-//    println("Dir from $current to $prev: $dir")
-//
-//    return generateSequence(seed = this) { it.previous }
-//        .windowed(2) { (a, b) ->
-//            println("$a -> $b: ${a.current.pos.directionTo(b.current.pos)} == $dir")
-//            a.current.pos.directionTo(b.current.pos) == dir
-//        }
-//        .filter { it }
-//        .count() + 1
-//}
+private fun Dir17.toChar(): Char = when (this) {
+    Dir17.UP -> '^'
+    Dir17.RIGHT -> '>'
+    Dir17.DOWN -> 'v'
+    Dir17.LEFT -> '<'
+}
 
 private fun Node17.countStraight(): Int {
     return generateSequence(seed = this) { it.previous }
@@ -121,18 +115,20 @@ private fun Grid17.findPath(start: Beam17, end: Pos17): Node17? {
 
 private fun Grid17.printPath(path: Node17) {
     val grid = map { it.mapTo(mutableListOf()) { n -> n.digitToChar() } }
-    var node: Node17? = path
-    while (node != null) {
-        val char = when (node.current.dir) {
-            Dir17.UP -> '^'
-            Dir17.DOWN -> 'v'
-            Dir17.LEFT -> '<'
-            Dir17.RIGHT -> '>'
+    val nodes = generateSequence(path) { it.previous }.toList()
+    grid.withIndex().forEach { (y, row) ->
+        row.withIndex().forEach { (x, cell) ->
+            val pos = Pos17(y, x)
+            val cellNode = nodes.firstOrNull { it.current.pos == pos }
+            if (cellNode != null) {
+//                print(Ansi.ansi().fgBlue().a(cell))
+                print(Ansi.ansi().fgBlue().a(cellNode.current.dir.toChar()))
+            } else {
+                print(Ansi.ansi().fgDefault().a(cell))
+            }
         }
-        grid[node.current.pos.y][node.current.pos.x] = char
-        node = node.previous
+        println()
     }
-    grid.forEach { println(it.joinToString("")) }
 }
 
 fun String.day17a(): Int {

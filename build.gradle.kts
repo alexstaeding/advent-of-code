@@ -25,6 +25,7 @@ subprojects {
     dependencies {
         implementation(rootProject)
         testImplementation(rootProject.libs.kotest)
+        implementation(rootProject.libs.jansi)
     }
     tasks {
         test {
