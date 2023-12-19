@@ -73,18 +73,15 @@ private val deepFillGrid: DeepRecursiveFunction<Pair<Grid18, Pos18>, Unit> =
 private enum class Dir18 { R, D, L, U }
 
 fun main() {
-    Framework.getInput(18, useExample = false).readText().day18a().let { println(it) }
+    Framework.getInput(18, useExample = true).readText().day18b().let { println(it) }
 }
 
-fun String.day18a(): Int {
-
+private fun String.makeGrid(parser: (String) -> Pair<Dir18, Int>): Grid18 {
     var current = Pos18(310, 130)
 //    var current = Pos18(0, 0)
     val grid = Grid18()
     lines().forEach { line ->
-        val (dirString, countString) = Regex("([RDLU]) (\\d+).*").find(line)!!.destructured
-        val dir = Dir18.valueOf(dirString)
-        val count = countString.toInt()
+        val (dir, count) = parser(line)
         repeat(count) {
             val next = when (dir) {
                 Dir18.R -> Pos18(current.y, current.x + 1)
@@ -96,10 +93,32 @@ fun String.day18a(): Int {
             current = next
         }
     }
-    grid.print()
-    println()
-    val inside = grid.asSequence().map { it.first }.first { grid.isDefinitelyEnclosed(it) }
-    deepFillGrid(grid to inside)
-    grid.print()
-    return grid.asSequence().map { it.second }.count { it == '#' }
+    return grid
+}
+
+private fun Grid18.solveGrid(): Int {
+    val inside = asSequence().map { it.first }.first { isDefinitelyEnclosed(it) }
+    deepFillGrid(this to inside)
+    return asSequence().map { it.second }.count { it == '#' }
+}
+
+fun String.day18a(): Int {
+    return makeGrid { line ->
+        val (dirString, countString) = Regex("([RDLU]) (\\d+).*").find(line)!!.destructured
+        Dir18.valueOf(dirString) to countString.toInt()
+    }.solveGrid()
+}
+
+fun String.day18b(): Int {
+    return makeGrid { line ->
+        val substr = line.substringAfterLast(' ')
+        println("substr: $substr")
+        val (num) = Regex("\\(#(.*)\\)")
+            .find(substr)!!.destructured
+
+        val distance = num.substring(0..<5).toInt(16)
+        val dir = Dir18.entries[num[5].toString().toInt()]
+        println("$distance $dir")
+        dir to distance
+    }.solveGrid()
 }
