@@ -57,11 +57,14 @@ private fun Node17.countStraight(): Int {
         .count()
 }
 
-private fun Node17.sumOfPenalties(grid: Grid17): Int {
+private fun Node17.cost(grid: Grid17): Int {
     return generateSequence(seed = this) { it.previous }
         .takeWhile { it.previous != null }
         .sumOf { grid[it.current.pos] }
 }
+
+private fun Node17.asSequence(): Sequence<Node17> =
+    generateSequence(seed = this) { it.previous }
 
 private fun Beam17.redirect(dir: Dir17) = Beam17(this.pos + dir.pos, dir)
 private fun Beam17.continueStraight() = redirect(dir)
@@ -78,22 +81,23 @@ fun main() {
 
 private fun Grid17.findPath(start: Beam17, end: Pos17): Node17? {
     val comparator: Comparator<Node17> =
-        Comparator.comparing<Node17, Int> { it.sumOfPenalties(this) }
+        Comparator.comparing<Node17, Int> { it.cost(this) }
+            .then(Comparator.comparing { it.asSequence().count() })
             .then(Comparator.comparing { it.current.pos.distanceTo(end) })
 
     val queue = PriorityQueue(comparator)
     val visited = mutableSetOf<Beam17>()
     queue.add(Node17(start, null))
-    val solutions: MutableList<Node17> = mutableListOf()
-
+    val solutions = mutableListOf<Node17>()
     while (queue.isNotEmpty()) {
         val node = queue.remove()
         if (node.current in visited || (node.current.pos !in this)) {
             continue
         }
+
         visited.add(node.current)
         if (node.current.pos == end) {
-            println("Found solution with penalty ${node.sumOfPenalties(this)}")
+            println("Found solution with penalty ${node.cost(this)}")
             solutions.add(node)
         }
 
@@ -110,7 +114,7 @@ private fun Grid17.findPath(start: Beam17, end: Pos17): Node17? {
             queue.add(Node17(it, node))
         }
     }
-    return solutions.minByOrNull { it.sumOfPenalties(this) }
+    return solutions.minByOrNull { it.cost(this) }
 }
 
 private fun Grid17.printPath(path: Node17) {
@@ -121,8 +125,8 @@ private fun Grid17.printPath(path: Node17) {
             val pos = Pos17(y, x)
             val cellNode = nodes.firstOrNull { it.current.pos == pos }
             if (cellNode != null) {
-//                print(Ansi.ansi().fgBlue().a(cell))
-                print(Ansi.ansi().fgBlue().a(cellNode.current.dir.toChar()))
+                print(Ansi.ansi().fgBlue().a(cell))
+//                print(Ansi.ansi().fgBlue().a(cellNode.current.dir.toChar()))
             } else {
                 print(Ansi.ansi().fgDefault().a(cell))
             }
@@ -141,5 +145,5 @@ fun String.day17a(): Int {
 
     grid.printPath(path)
 
-    return path.sumOfPenalties(grid) - grid[start.pos]
+    return path.cost(grid) - grid[start.pos]
 }
