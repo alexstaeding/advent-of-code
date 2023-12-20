@@ -27,10 +27,6 @@ private fun Pos11.neighbors(): Set<Pos11> {
 private operator fun Grid11.get(pos: Pos11) = this[pos.y][pos.x]
 private operator fun Grid11.contains(pos: Pos11) = pos.y in indices && pos.x in this[pos.y].indices
 
-fun main() {
-    Framework.getInput(11, useExample = false).readLines().day11b().let { println(it) }
-}
-
 private fun Grid11.findGalaxies(): Set<Galaxy11> {
     var index = 0
     return flatMapIndexedTo(mutableSetOf()) { y, r ->
