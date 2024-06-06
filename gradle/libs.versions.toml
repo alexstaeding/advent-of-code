@@ -3,7 +3,7 @@ kotlin = "1.9.21"
 
 [libraries]
 jansi = "org.fusesource.jansi:jansi:2.4.1"
-kotest = "io.kotest:kotest-runner-junit5-jvm:5.8.0"
+kotest = "io.kotest:kotest-runner-junit5-jvm:5.9.1"
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
