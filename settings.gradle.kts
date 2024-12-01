@@ -12,6 +12,7 @@ val years = file("years")
 sequenceOf(
     "2022",
     "2023",
+    "2024",
 ).forEach {
     val project = ":advent-of-code-$it"
     include(project)
