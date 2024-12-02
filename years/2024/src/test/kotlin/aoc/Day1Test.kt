@@ -14,7 +14,7 @@ private val spec: FunSpec.() -> Unit = {
         Framework.getInput(1, useExample = false).lineSequence().day1a() shouldBe 1722302
     }
     test("inputFileB") {
-        Framework.getInput(1, useExample = false).lineSequence().day1b() shouldBe 1722302
+        Framework.getInput(1, useExample = false).lineSequence().day1b() shouldBe 20373490
     }
 }
 
