@@ -5,7 +5,7 @@ import io.kotest.matchers.shouldBe
 
 private val spec: FunSpec.() -> Unit = {
     test("inputFileExampleA") {
-        Framework.getInput(9,  useExample = true).lineSequence().day9a() shouldBe 114L
+        Framework.getInput(9, useExample = true).lineSequence().day9a() shouldBe 114L
     }
     test("inputFileExampleB") {
         Framework.getInput(9, useExample = true).lineSequence().day9b() shouldBe 2L

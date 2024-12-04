@@ -48,6 +48,7 @@ private data class Pos12(val y: Int, val x: Int) {
 private enum class Dir12 { N, E, S, W }
 
 private typealias HeightMap = List<List<Node12>>
+
 private data class State12(
     val heightmap: HeightMap,
     val start: Pos12,

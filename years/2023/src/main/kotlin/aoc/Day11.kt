@@ -78,8 +78,8 @@ private fun List<String>.day11(expansionMultiplier: Int = 1): Long {
 
     val ext = expansionMultiplier - 1
     return pairs.sumOf { (a, b) ->
-        val yDelta = ext * emptyRows.count { it in a.pos.y..b.pos.y || it in b.pos.y .. a.pos.y }
-        val xDelta = ext * emptyCols.count { it in a.pos.x..b.pos.x || it in b.pos.x .. a.pos.x }
+        val yDelta = ext * emptyRows.count { it in a.pos.y..b.pos.y || it in b.pos.y..a.pos.y }
+        val xDelta = ext * emptyCols.count { it in a.pos.x..b.pos.x || it in b.pos.x..a.pos.x }
         val length = findPath(a.pos, b.pos).size + yDelta + xDelta
         length.toLong()
     }
